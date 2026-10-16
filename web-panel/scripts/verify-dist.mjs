@@ -17,12 +17,14 @@ const REQUIRED_FILES = [
 const FORBIDDEN_SUBSTRINGS = [
     'mock-instance',
     'Mock Adventure',
+    'Simulation',
     'Debug session',
     'mock=1',
     'demo-session',
     'vite.svg',
     'tailwind-merge',
     'class-variance-authority',
+    'clsx',
 ];
 
 const failures = [];

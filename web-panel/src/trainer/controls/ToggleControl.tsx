@@ -1,5 +1,5 @@
-import { cn } from '@/shared/lib/ui';
 import { triggerHaptic } from '@/shared/haptics';
+import { cn } from '@/shared/lib/ui';
 
 import type { ControlInternalProps } from './shared';
 

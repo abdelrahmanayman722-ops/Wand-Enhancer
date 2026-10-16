@@ -1,5 +1,6 @@
 const crypto = require('node:crypto');
 const http = require('node:http');
+const os = require('node:os');
 const path = require('node:path');
 
 const {
@@ -8,6 +9,7 @@ const {
     DEFAULT_REMOTE_HOST,
     DEFAULT_REMOTE_PORT,
     DEV_SERVER_PORTS,
+    PAIRING_TOKEN_QUERY_PARAM,
     PORT_SCAN_RANGE,
     REMOTE_BASE_PATH,
     REMOTE_HEALTH_PATH,
@@ -41,6 +43,7 @@ const HTTP_NOT_FOUND = 404;
 const WS_CLOSE_NORMAL = 1000;
 const WS_CLOSE_PROTOCOL_ERROR = 1002;
 const WS_CLOSE_UNSUPPORTED = 1003;
+const WS_CLOSE_POLICY_VIOLATION = 1008;
 const WS_CLOSE_TOO_LARGE = 1009;
 
 declare global {
@@ -67,11 +70,6 @@ type ClientMessage = {
 };
 
 function createBridgeServer(options: BridgeOptions = {}) {
-    const sessionToken =
-        options.sessionToken ||
-        (crypto.randomBytes
-            ? crypto.randomBytes(8).toString('hex')
-            : Math.random().toString(36).slice(2, 10));
     const preferredPort = Number(
         options.port || process.env.WAND_REMOTE_PORT || DEFAULT_REMOTE_PORT,
     );
@@ -83,11 +81,75 @@ function createBridgeServer(options: BridgeOptions = {}) {
     const panelRoot = options.panelRoot || path.dirname(__dirname);
     const clients = new Set<BridgeClient>();
     const log = createBridgeLogger(options);
+    // Regenerated every bridge start: a fresh QR/link is required to pair again, which
+    // also doubles as implicit revocation of anyone who paired against a prior run.
+    const pairingToken = crypto.randomBytes(9).toString('base64url');
     let advertisedUrls: string[] = [];
     let setValueHandler: SetValueHandler | null = null;
     let commandHandler: CommandHandler | null = null;
     let listening = false;
     let closed = false;
+
+    let prevCpuTimes: { idle: number; total: number } | null = null;
+    function getCpuPercent(): number {
+        try {
+            const cpus = os.cpus();
+            if (!cpus || cpus.length === 0) return 0;
+            let idle = 0;
+            let total = 0;
+            for (const cpu of cpus) {
+                for (const type in cpu.times) {
+                    total += cpu.times[type as keyof typeof cpu.times];
+                }
+                idle += cpu.times.idle;
+            }
+            if (!prevCpuTimes) {
+                prevCpuTimes = { idle, total };
+                return 0;
+            }
+            const idleDelta = idle - prevCpuTimes.idle;
+            const totalDelta = total - prevCpuTimes.total;
+            prevCpuTimes = { idle, total };
+            if (totalDelta <= 0) return 0;
+            return Math.max(
+                0,
+                Math.min(100, Math.round(((totalDelta - idleDelta) / totalDelta) * 100)),
+            );
+        } catch {
+            return 0;
+        }
+    }
+
+    function getSystemTelemetry() {
+        try {
+            const totalMem = Math.round(os.totalmem() / 1024 / 1024);
+            const freeMem = Math.round(os.freemem() / 1024 / 1024);
+            return {
+                cpuPercent: getCpuPercent(),
+                memoryUsedMb: Math.max(0, totalMem - freeMem),
+                memoryTotalMb: totalMem,
+                timestamp: Date.now(),
+            };
+        } catch {
+            return {
+                cpuPercent: 0,
+                memoryUsedMb: 0,
+                memoryTotalMb: 0,
+                timestamp: Date.now(),
+            };
+        }
+    }
+
+    const telemetryInterval = setInterval(() => {
+        if (closed || clients.size === 0) return;
+        const telemetry = getSystemTelemetry();
+        for (const client of clients) {
+            if (client.handshaken && !client.closed) {
+                sendJson(client, 'telemetry', telemetry);
+            }
+        }
+    }, 2500);
+
     const bridgeState = createBridgeState({
         clients,
         log,
@@ -100,10 +162,16 @@ function createBridgeServer(options: BridgeOptions = {}) {
 
     function setAdvertisedPort(nextPort: number) {
         port = nextPort;
-        advertisedUrls = getAdvertisedUrls(port, sessionToken);
+        advertisedUrls = getAdvertisedUrls(port).map(appendPairingToken);
         globalThis.__wandRemoteBridgeUrl =
             advertisedUrls.find((entry: string) => !entry.includes('localhost')) ||
             advertisedUrls[0];
+    }
+
+    function appendPairingToken(url: string): string {
+        const parsed = new URL(url);
+        parsed.searchParams.set(PAIRING_TOKEN_QUERY_PARAM, pairingToken);
+        return parsed.toString();
     }
 
     function setHandler(handler: SetValueHandler | null) {
@@ -308,6 +376,21 @@ function createBridgeServer(options: BridgeOptions = {}) {
         }
 
         if (message?.type === 'hello') {
+            if (safeString(message.payload?.pairingToken) !== pairingToken) {
+                sendJson(
+                    client,
+                    'error',
+                    {
+                        code: 'pairing_required',
+                        message:
+                            'This device is not paired. Scan the QR code shown in Wand to pair, then reconnect.',
+                    },
+                    message.requestId ?? null,
+                );
+                closeClient(client, WS_CLOSE_POLICY_VIOLATION, 'Pairing required.');
+                return;
+            }
+
             client.handshaken = true;
             sendJson(
                 client,
@@ -323,6 +406,7 @@ function createBridgeServer(options: BridgeOptions = {}) {
                 message.requestId ?? null,
             );
             bridgeState.sendSnapshot(client);
+            sendJson(client, 'telemetry', getSystemTelemetry());
             return;
         }
 
@@ -458,15 +542,6 @@ function createBridgeServer(options: BridgeOptions = {}) {
             return;
         }
 
-        if (sessionToken && !isLoopbackRequest(request)) {
-            const clientToken = url.searchParams.get('token') || request.headers['x-wand-token'];
-            if (clientToken !== sessionToken) {
-                log('warn', `Rejecting unauthorized WebSocket upgrade from ${request.socket?.remoteAddress}`);
-                rejectUpgrade(socket, HTTP_FORBIDDEN, 'Forbidden - Invalid Token');
-                return;
-            }
-        }
-
         const key = request.headers['sec-websocket-key'];
         if (typeof key !== 'string' || !key) {
             rejectUpgrade(socket, 400, 'Bad Request');
@@ -497,6 +572,7 @@ function createBridgeServer(options: BridgeOptions = {}) {
         'info',
         `Bridge starting (pid=${process.pid}, panelRoot=${panelRoot}, preferredPort=${port}, host=${host})`,
     );
+    log('info', `Pairing token: ${pairingToken} (embedded in advertised URLs automatically).`);
     globalThis.__wandRemoteBridgeLogFile = log.file;
 
     const server = http.createServer(handleRequest);
@@ -531,10 +607,11 @@ function createBridgeServer(options: BridgeOptions = {}) {
         get remoteUrl() {
             return globalThis.__wandRemoteBridgeUrl;
         },
-        get sessionToken() {
-            return sessionToken;
+        get pairingToken() {
+            return pairingToken;
         },
         close() {
+            clearInterval(telemetryInterval);
             for (const client of clients) {
                 closeClient(client);
             }
@@ -590,19 +667,7 @@ function isAllowedWebSocketOrigin(origin: string | undefined, host: string | und
 }
 
 function isLoopback(hostname: string) {
-    const clean = hostname.startsWith('::ffff:') ? hostname.slice(7) : hostname;
-    return (
-        clean === 'localhost' ||
-        clean === '127.0.0.1' ||
-        clean === '::1' ||
-        clean === '[::1]' ||
-        clean.startsWith('127.')
-    );
-}
-
-function isLoopbackRequest(request: IncomingMessage) {
-    const remote = request.socket?.remoteAddress;
-    return typeof remote === 'string' && isLoopback(remote);
+    return ['localhost', '127.0.0.1', '[::1]', '::1'].includes(hostname.toLowerCase());
 }
 
 function rejectUpgrade(socket: Socket, statusCode: number, statusText: string) {

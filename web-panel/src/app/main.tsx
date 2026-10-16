@@ -32,3 +32,9 @@ function render() {
 activateLocale(detectInitialLocale())
     .catch(() => undefined)
     .then(render);
+
+if ('serviceWorker' in navigator && !import.meta.env.DEV) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+    });
+}

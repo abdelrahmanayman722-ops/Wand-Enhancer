@@ -6,14 +6,27 @@ namespace WandEnhancer.Utils
 {
     public static class FirewallHelper
     {
-        public const string DefaultRuleName = "Wand Remote Panel";
+        public const string DefaultRuleName = "SovereignTitan Remote Panel";
+        public const string LegacyRuleName = "Wand Remote Panel";
         public const int DefaultPort = 3223;
 
         /// <summary>
         /// Checks whether an inbound Windows Firewall rule exists for the specified rule name.
+        /// When ruleName matches DefaultRuleName, it also checks the legacy rule name.
         /// </summary>
         public static bool IsRulePresent(string ruleName = DefaultRuleName)
         {
+            if (string.Equals(ruleName, DefaultRuleName, StringComparison.OrdinalIgnoreCase))
+            {
+                return IsRulePresentInternal(DefaultRuleName) || IsRulePresentInternal(LegacyRuleName);
+            }
+
+            return IsRulePresentInternal(ruleName);
+        }
+
+        private static bool IsRulePresentInternal(string ruleName)
+        {
+            if (string.IsNullOrEmpty(ruleName)) return false;
             try
             {
                 var psi = new ProcessStartInfo("netsh", $"advfirewall firewall show rule name=\"{ruleName}\"")
@@ -109,9 +122,21 @@ namespace WandEnhancer.Utils
         /// </summary>
         public static bool RemoveFirewallRule(string ruleName = DefaultRuleName, Action<string, ELogType> logger = null)
         {
+            if (string.Equals(ruleName, DefaultRuleName, StringComparison.OrdinalIgnoreCase))
+            {
+                bool r1 = RemoveSingleRule(DefaultRuleName, logger);
+                bool r2 = RemoveSingleRule(LegacyRuleName, logger);
+                return r1 || r2;
+            }
+
+            return RemoveSingleRule(ruleName, logger);
+        }
+
+        private static bool RemoveSingleRule(string ruleName, Action<string, ELogType> logger)
+        {
             try
             {
-                if (!IsRulePresent(ruleName))
+                if (!IsRulePresentInternal(ruleName))
                 {
                     return true;
                 }
@@ -136,7 +161,7 @@ namespace WandEnhancer.Utils
             }
             catch (Exception ex)
             {
-                logger?.Invoke($"Failed to remove firewall rule: {ex.Message}", ELogType.Warn);
+                logger?.Invoke($"Failed to remove firewall rule '{ruleName}': {ex.Message}", ELogType.Warn);
                 return false;
             }
         }

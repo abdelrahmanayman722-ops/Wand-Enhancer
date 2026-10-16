@@ -132,6 +132,13 @@ namespace WandEnhancer.Core.Services
             }
 
             _activeLocaleDictionary = localeDict;
+
+            if (Application.Current?.MainWindow != null)
+            {
+                Application.Current.MainWindow.FlowDirection = supportedCulture.TextInfo.IsRightToLeft
+                    ? FlowDirection.RightToLeft
+                    : FlowDirection.LeftToRight;
+            }
             
             if (saveSettings)
             {

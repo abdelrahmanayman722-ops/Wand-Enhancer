@@ -12,16 +12,37 @@
     <s:String x:Key="mw_patch">Aplicar</s:String>
     <s:String x:Key="mw_restore">Restaurar</s:String>
     <s:String x:Key="mw_source_code">Código fuente</s:String>
-    <s:String x:Key="mw_made_by">Hecho con ❤️ por k1tbyte</s:String>
+    <s:String x:Key="mw_made_by">Hecho con ❤️ por Abdelrahman Ayman (@abdelrahmanayman722-ops)</s:String>
     <s:String x:Key="mw_star_hint">Pon una estrella si te fue útil ;)</s:String>
+    <s:String x:Key="mw_auto_doctor">Auto-Doctor y Reparador de Entorno</s:String>
     <s:String x:Key="mw_copy_logs">Copiar registros al portapapeles</s:String>
     <s:String x:Key="mw_export_logs">Exportar registros a un archivo</s:String>
+    <s:String x:Key="mw_update_badge">Nueva versión disponible</s:String>
     <!--#endregion -->
 
     <!--#region Settings -->
     <s:String x:Key="settings_title">Configuración</s:String>
     <s:String x:Key="settings_language">Idioma</s:String>
+    <s:String x:Key="settings_check_updates">Buscar actualizaciones al iniciar</s:String>
+    <s:String x:Key="settings_check_prereleases">Notificar también sobre versiones preliminares</s:String>
+    <s:String x:Key="settings_run_auto_doctor">Auto-Doctor y Reparación de Entorno (1 Clic)</s:String>
+    <s:String x:Key="settings_configure_firewall">Configurar Firewall de Windows (Puerto 3223)</s:String>
+    <s:String x:Key="settings_run_diagnostics">Ejecutar Diagnóstico del Sistema</s:String>
     <s:String x:Key="settings_save">Guardar</s:String>
+    <!--#endregion -->
+
+    <!--#region UpdatePopup -->
+    <s:String x:Key="up_popup_title">Actualización disponible</s:String>
+    <s:String x:Key="up_warning">SovereignTitan nunca se actualiza a sí mismo. Construya la nueva versión en su fork o abra la página de lanzamientos.</s:String>
+    <s:String x:Key="up_current_version">Actual:</s:String>
+    <s:String x:Key="up_latest_version">Última:</s:String>
+    <s:String x:Key="up_release_notes">Notas de la versión</s:String>
+    <s:String x:Key="up_show_more">Mostrar registro de cambios completo</s:String>
+    <s:String x:Key="up_show_less">Mostrar notas de la versión</s:String>
+    <s:String x:Key="up_loading_changelog">Cargando...</s:String>
+    <s:String x:Key="up_changelog_failed">No se pudo cargar el registro de cambios completo.</s:String>
+    <s:String x:Key="up_release_notes_unavailable">No se publicaron notas de la versión.</s:String>
+    <s:String x:Key="up_open_release">Abrir página de la versión</s:String>
     <!--#endregion -->
 
     <!--#region EnhanceVectorsPopup -->
@@ -40,6 +61,14 @@
     <s:String x:Key="pv_strategy_supervised">Supervised</s:String>
     <s:String x:Key="pv_strategy_hint">Static edita Wand en el disco, lo que rompe su firma digital. Supervised aplica el parche en memoria en cada inicio - puede activar el antivirus y podría no funcionar en todas las configuraciones.</s:String>
     <s:String x:Key="pv_popup_title">¿Qué vamos a mejorar?</s:String>
+    <!--#endregion -->
+
+    <!--#region CloseWandConfirmPopup -->
+    <s:String x:Key="cwc_popup_title">Wand está en ejecución</s:String>
+    <s:String x:Key="cwc_message">{0} debe cerrarse antes de continuar.</s:String>
+    <s:String x:Key="cwc_hint">Cualquier estado no guardado en Wand o en un juego modificado se perderá. Cierre el juego primero si se está ejecutando.</s:String>
+    <s:String x:Key="cwc_confirm">Forzar el cierre de Wand</s:String>
+    <s:String x:Key="cwc_cancel">Cancelar</s:String>
     <!--#endregion -->
 
     <!--#region Runtime log -->

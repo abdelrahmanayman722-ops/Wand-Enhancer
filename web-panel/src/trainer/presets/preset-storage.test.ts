@@ -1,5 +1,4 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-
 import { type CheatSchema, ECheatType } from '../../../protocol/messages';
 import {
     capturePresetValues,
@@ -11,36 +10,36 @@ import {
 
 const cheats: CheatSchema[] = [
     {
-        uuid: 'toggle',
-        target: 'god',
         type: ECheatType.Toggle,
-        name: 'God',
-        category: 'player',
-        args: {},
+        name: 'God Mode',
+        target: 'god',
+        uuid: 'u1',
+        category: 'Player',
+        description: null,
     },
     {
-        uuid: 'button',
-        target: 'apply',
         type: ECheatType.Button,
         name: 'Apply',
-        category: 'player',
-        args: {},
+        target: 'apply',
+        uuid: 'u2',
+        category: 'Player',
+        description: null,
     },
 ];
 
 describe('preset storage', () => {
-    beforeEach(() => localStorage.clear());
+    beforeEach(() => window.localStorage.clear());
 
     it('captures persistent values and excludes one-shot actions', () => {
         expect(capturePresetValues(cheats, { god: true, apply: 1 })).toEqual({ god: true });
     });
 
     it('revives valid presets and ignores malformed entries', () => {
-        localStorage.setItem(
+        window.localStorage.setItem(
             'presets',
             JSON.stringify([
                 { id: 'valid', name: 'Valid', createdAt: 'now', values: { god: true } },
-                { id: 'invalid', values: {} },
+                { id: 'broken' },
             ]),
         );
 
@@ -49,26 +48,64 @@ describe('preset storage', () => {
         ]);
 
         savePresets('presets', []);
-        expect(localStorage.getItem('presets')).toBeNull();
+        expect(window.localStorage.getItem('presets')).toBeNull();
     });
 
-    it('exports presets to a JSON string and imports them back safely', () => {
-        const initial = [
-            { id: 'p1', name: 'Preset 1', createdAt: '2026-10-08T00:00:00Z', values: { god: true } },
-        ];
-        savePresets('test_key', initial);
+    it('round-trips presets through export and import', () => {
+        savePresets('presets', [{ id: 'a', name: 'A', createdAt: 'now', values: { god: true } }]);
 
-        const exported = exportPresetsJson('test_key');
-        expect(exported).toContain('Preset 1');
-        expect(exported).toContain('god');
+        const json = exportPresetsJson('presets');
+        savePresets('presets', []);
 
-        // Test importing into a fresh key
-        const result = importPresetsJson('new_key', exported);
-        expect(result.count).toBe(1);
-        expect(loadPresets('new_key')).toEqual(initial);
+        const result = importPresetsJson('presets', json);
+        expect(result.imported).toBe(1);
+        expect(result.skipped).toBe(0);
+        expect(loadPresets('presets')).toEqual([
+            { id: 'a', name: 'A', createdAt: 'now', values: { god: true } },
+        ]);
+    });
 
-        // Test importing invalid JSON
-        const invalidResult = importPresetsJson('new_key', 'not valid json');
-        expect(invalidResult.count).toBe(0);
+    it('reassigns the id instead of dropping an imported preset with a colliding id', () => {
+        savePresets('presets', [
+            { id: 'a', name: 'Existing', createdAt: 'now', values: { god: true } },
+        ]);
+
+        const result = importPresetsJson(
+            'presets',
+            JSON.stringify([
+                { id: 'a', name: 'Imported', createdAt: 'now', values: { god: false } },
+            ]),
+        );
+
+        expect(result.imported).toBe(1);
+        expect(result.presets).toHaveLength(2);
+        const [existing, imported] = result.presets;
+        expect(existing).toEqual({
+            id: 'a',
+            name: 'Existing',
+            createdAt: 'now',
+            values: { god: true },
+        });
+        expect(imported.id).not.toBe('a');
+        expect(imported.name).toBe('Imported');
+    });
+
+    it('skips malformed entries without touching valid ones, and ignores non-array/non-JSON input', () => {
+        savePresets('presets', []);
+
+        const result = importPresetsJson(
+            'presets',
+            JSON.stringify([
+                { id: 'valid', name: 'Valid', createdAt: 'now', values: { god: true } },
+                { id: 'invalid' },
+                'not an object',
+            ]),
+        );
+
+        expect(result.imported).toBe(1);
+        expect(result.skipped).toBe(2);
+
+        expect(importPresetsJson('presets', JSON.stringify({ not: 'an array' })).imported).toBe(0);
+        expect(importPresetsJson('presets', 'not json').imported).toBe(0);
     });
 });

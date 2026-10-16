@@ -11,4 +11,3 @@ export function triggerHaptic(duration = 35): void {
         // Ignored on platforms without vibration or inside restricted frames.
     }
 }
-

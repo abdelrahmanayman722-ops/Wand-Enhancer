@@ -46,6 +46,8 @@ export function protocolAction(message: IncomingMessage): RemoteSessionAction | 
                       message:
                           message.payload.error?.message ?? 'The remote game command was rejected.',
                   };
+        case 'telemetry':
+            return { type: 'telemetry', payload: message.payload };
         case 'error':
             return { type: 'error', message: message.payload.message };
     }

@@ -115,7 +115,7 @@ namespace WandEnhancer.Core
             else
             {
                 _logger("[ENHANCER] Backup found, restoring pristine app.asar before patching...", ELogType.Info);
-                AsarSharp.Utils.Extensions.CopyOver(_backupPath, _asarPath);
+                FileRetry.Run(() => AsarSharp.Utils.Extensions.CopyOver(_backupPath, _asarPath));
             }
 
             if (!Directory.Exists(_unpackedBackupPath) && Directory.Exists(_unpackedPath))
@@ -126,12 +126,15 @@ namespace WandEnhancer.Core
             else if (Directory.Exists(_unpackedBackupPath))
             {
                 _logger("[ENHANCER] Restoring pristine app.asar.unpacked before patching...", ELogType.Info);
-                if (Directory.Exists(_unpackedPath))
+                FileRetry.Run(() =>
                 {
-                    Directory.Delete(_unpackedPath, true);
-                }
+                    if (Directory.Exists(_unpackedPath))
+                    {
+                        Directory.Delete(_unpackedPath, true);
+                    }
 
-                AsarSharp.Utils.Extensions.CopyDirectory(_unpackedBackupPath, _unpackedPath);
+                    AsarSharp.Utils.Extensions.CopyDirectory(_unpackedBackupPath, _unpackedPath);
+                });
             }
             else if (!Directory.Exists(_unpackedPath))
             {
@@ -155,16 +158,31 @@ namespace WandEnhancer.Core
                 PackSources();
                 _strategy.ApplyEnablement(new PatchContext(_weModConfig, _logger, _unpackedPath));
 
-                // Supervised needs its launcher at every start; static only to re-apply on update.
-                if (_strategy.RequiresLauncherAlways || _config.AutoApplyAfterUpdate)
+                // Supervised needs to intercept every start; static never does.
+                if (_strategy.RequiresLauncherAlways)
                 {
                     LauncherDeployment.Deploy(_weModConfig, _logger);
-                    SaveAutoPatchConfig();
                 }
                 else
                 {
                     LauncherDeployment.Restore(_weModConfig);
+                }
+
+                // Independent of the strategy: catching an update needs to run the moment Squirrel
+                // writes a new version folder, not on next launch. Squirrel rewrites the root
+                // execution stub as part of applying the update itself, so by the time the user
+                // next starts Wand - through either strategy's own launcher interception - that
+                // rewrite has already erased it. UpdateWatcherService runs independently of launch
+                // timing entirely.
+                if (_config.AutoApplyAfterUpdate)
+                {
+                    SaveAutoPatchConfig();
+                    Services.WatcherAutostart.EnsureRunning(_weModConfig, _logger);
+                }
+                else
+                {
                     DeleteAutoPatchConfig();
+                    Services.WatcherAutostart.Stop(_weModConfig);
                 }
 
                 File.Delete(markerPath);
@@ -290,6 +308,16 @@ namespace WandEnhancer.Core
                 // Undo on-disk fuse and launcher deployment to prevent a tampered unlaunchable Wand.
                 LauncherDeployment.Restore(_weModConfig);
                 DiskFusePatch.Remove(_weModConfig.ExecutablePath, _logger);
+                if (File.Exists(_asarPath) && File.Exists(_weModConfig?.ExecutablePath))
+                {
+                    try
+                    {
+                        Patching.Strategies.Static.AsarIntegrityResourcePatch.Patch(_weModConfig.ExecutablePath, _asarPath, _logger);
+                    }
+                    catch
+                    {
+                    }
+                }
 
                 _logger("[ENHANCER] Patch failed - the original Wand files were restored.", ELogType.Warn);
             }
@@ -308,14 +336,19 @@ namespace WandEnhancer.Core
             }
 
             ProcessTerminator.TryKillProcess(_weModConfig.BrandName);
-            AsarSharp.Utils.Extensions.CopyOver(_backupPath, _asarPath);
-
-            if (Directory.Exists(_unpackedPath))
+            FileRetry.Run(() =>
             {
-                Directory.Delete(_unpackedPath, true);
-            }
+                AsarSharp.Utils.Extensions.CopyOver(_backupPath, _asarPath);
 
-            AsarSharp.Utils.Extensions.CopyDirectory(_unpackedBackupPath, _unpackedPath);
+                if (Directory.Exists(_unpackedPath))
+                {
+                    Directory.Delete(_unpackedPath, true);
+                }
+
+                AsarSharp.Utils.Extensions.CopyDirectory(_unpackedBackupPath, _unpackedPath);
+            });
+
+            Services.WatcherAutostart.Stop(_weModConfig);
 
             // Clean up legacy proxy DLL
             var proxyDllPath = Path.Combine(_weModConfig.RootDirectory, ProxyDllFileName);
@@ -327,6 +360,13 @@ namespace WandEnhancer.Core
             // Undo all footprints at once: launcher stub and on-disk fuse.
             LauncherDeployment.Restore(_weModConfig);
             DiskFusePatch.Remove(_weModConfig.ExecutablePath, _logger);
+            try
+            {
+                Patching.Strategies.Static.AsarIntegrityResourcePatch.Patch(_weModConfig.ExecutablePath, _asarPath, _logger);
+            }
+            catch
+            {
+            }
 
             string squirrelRoot = SquirrelRoot;
             foreach (var leftover in new[]

@@ -7,7 +7,7 @@
         xmlns:controls="clr-namespace:WandEnhancer.View.Controls"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance local:MainWindowVm}"
-        Title="WandEnhancer"
+        Title="SovereignTitan"
         Height="510" MaxHeight="510"
         Width="780" MaxWidth="780" 
         Opacity="0.97"
@@ -32,14 +32,14 @@
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="25 0 0 0">
                     <Viewbox VerticalAlignment="Center" Width="32" Height="32">
                         <Path 
-                            Fill="White" Data="{StaticResource Logo}"/>
+                            Fill="{DynamicResource Primary}" Data="{StaticResource Logo}"/>
                     </Viewbox>
                     <TextBlock Foreground="{DynamicResource Foreground}"
-                               FontWeight="SemiBold" Opacity="0.9"
+                               FontWeight="SemiBold" Opacity="0.95"
                                VerticalAlignment="Center"
                                FontSize="18" Margin="10 0 0 0">
                         <Bold>
-                            WandEnhancer 
+                            SovereignTitan
                         </Bold>
                     </TextBlock>
                     <TextBlock x:Name="VersionLabel" VerticalAlignment="Bottom"
@@ -147,27 +147,30 @@
                             <Setter.Value>
                                 <ControlTemplate TargetType="ListBoxItem">
                                     <Border x:Name="Card" HorizontalAlignment="Left"
-                                            Background="#08fc81"
+                                            Background="#10B981"
                                             BorderBrush="{DynamicResource Border}"
-                                            Padding="5 3 5 3" CornerRadius="3">
-                                        <TextBox Text="{Binding Message}" 
-                                                 Cursor="IBeam" FontSize="13"
+                                            Padding="6 3.5" CornerRadius="4">
+                                        <TextBox x:Name="LogText" Text="{Binding Message}" 
+                                                 Cursor="IBeam" FontSize="12.5"
+                                                 Foreground="#0F172A"
                                                  Background="Transparent" TextWrapping="Wrap"
                                                  BorderThickness="0"
                                                  IsReadOnly="True"/>
                                     </Border>
                                     <ControlTemplate.Triggers>
                                         <DataTrigger Binding="{Binding LogType}" Value="Error">
-                                            <Setter  TargetName="Card" Property="Background" Value="#f04343"></Setter>
+                                            <Setter TargetName="Card" Property="Background" Value="#E11D48"/>
+                                            <Setter TargetName="LogText" Property="Foreground" Value="#FFFFFF"/>
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding LogType}" Value="Info">
-                                            <Setter  TargetName="Card" Property="Background" Value="#FFF"></Setter>
+                                            <Setter TargetName="Card" Property="Background" Value="#F1F5F9"/>
+                                            <Setter TargetName="LogText" Property="Foreground" Value="#0F172A"/>
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding LogType}" Value="Warn">
-                                            <Setter  TargetName="Card" Property="Background" Value="#facc15"></Setter>
+                                            <Setter TargetName="Card" Property="Background" Value="#FBBF24"/>
+                                            <Setter TargetName="LogText" Property="Foreground" Value="#0F172A"/>
                                         </DataTrigger>
                                     </ControlTemplate.Triggers>
-
                                 </ControlTemplate>
                             </Setter.Value>
                         </Setter>
@@ -177,6 +180,11 @@
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top"
                                         Margin="0 4 4 0">
                                 <Button Width="22" Height="22" Padding="4"
+                                        Style="{StaticResource IconButton}"
+                                        Tag="{StaticResource DoctorIcon}"
+                                        ToolTip="{DynamicResource mw_auto_doctor}"
+                                        Command="{Binding RunAutoDoctorCommand}"/>
+                                <Button Width="22" Height="22" Padding="4" Margin="4 0 0 0"
                                         Style="{StaticResource IconButton}"
                                         Tag="{StaticResource CopyIcon}"
                                         ToolTip="{DynamicResource mw_copy_logs}"

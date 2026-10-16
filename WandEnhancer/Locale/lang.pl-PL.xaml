@@ -12,16 +12,37 @@
     <s:String x:Key="mw_patch">Zastosuj</s:String>
     <s:String x:Key="mw_restore">Przywróć</s:String>
     <s:String x:Key="mw_source_code">Kod źródłowy</s:String>
-    <s:String x:Key="mw_made_by">Wykonane z ❤️ przez k1tbyte</s:String>
+    <s:String x:Key="mw_made_by">Stworzone z ❤️ przez Abdelrahman Ayman (@abdelrahmanayman722-ops)</s:String>
     <s:String x:Key="mw_star_hint">Daj gwiazdkę, jeśli ci pomogło ;)</s:String>
+    <s:String x:Key="mw_auto_doctor">Auto-Doctor i naprawa środowiska</s:String>
     <s:String x:Key="mw_copy_logs">Skopiuj logi do schowka</s:String>
     <s:String x:Key="mw_export_logs">Eksportuj logi do pliku</s:String>
+    <s:String x:Key="mw_update_badge">Dostępna nowa wersja</s:String>
     <!--#endregion -->
 
     <!--#region Settings -->
     <s:String x:Key="settings_title">Ustawienia</s:String>
     <s:String x:Key="settings_language">Język</s:String>
+    <s:String x:Key="settings_check_updates">Sprawdzaj aktualizacje przy starcie</s:String>
+    <s:String x:Key="settings_check_prereleases">Powiadamiaj także o wersjach wstępnych</s:String>
+    <s:String x:Key="settings_run_auto_doctor">Auto-Doctor i naprawa środowiska (1-klik)</s:String>
+    <s:String x:Key="settings_configure_firewall">Skonfiguruj Zaporę Windows (Port 3223)</s:String>
+    <s:String x:Key="settings_run_diagnostics">Uruchom diagnostykę systemu</s:String>
     <s:String x:Key="settings_save">Zapisz</s:String>
+    <!--#endregion -->
+
+    <!--#region UpdatePopup -->
+    <s:String x:Key="up_popup_title">Dostępna aktualizacja</s:String>
+    <s:String x:Key="up_warning">SovereignTitan nigdy nie aktualizuje się automatycznie. Zbuduj nową wersję w swoim forku lub otwórz stronę wydań.</s:String>
+    <s:String x:Key="up_current_version">Bieżąca:</s:String>
+    <s:String x:Key="up_latest_version">Najnowsza:</s:String>
+    <s:String x:Key="up_release_notes">Informacje o wydaniu</s:String>
+    <s:String x:Key="up_show_more">Pokaż pełny dziennik zmian</s:String>
+    <s:String x:Key="up_show_less">Pokaż informacje o wydaniu</s:String>
+    <s:String x:Key="up_loading_changelog">Ładowanie...</s:String>
+    <s:String x:Key="up_changelog_failed">Nie można załadować pełnego dziennika zmian.</s:String>
+    <s:String x:Key="up_release_notes_unavailable">Nie opublikowano informacji o wydaniu.</s:String>
+    <s:String x:Key="up_open_release">Otwórz stronę wydania</s:String>
     <!--#endregion -->
 
     <!--#region EnhanceVectorsPopup -->
@@ -40,6 +61,14 @@
     <s:String x:Key="pv_strategy_supervised">Supervised</s:String>
     <s:String x:Key="pv_strategy_hint">Static modyfikuje Wand na dysku, co łamie jego podpis cyfrowy. Supervised łata w pamięci przy każdym uruchomieniu - może wywołać program antywirusowy i może nie działać w każdej konfiguracji.</s:String>
     <s:String x:Key="pv_popup_title">Co będziemy ulepszać?</s:String>
+    <!--#endregion -->
+
+    <!--#region CloseWandConfirmPopup -->
+    <s:String x:Key="cwc_popup_title">Wand jest uruchomiony</s:String>
+    <s:String x:Key="cwc_message">{0} musi zostać zamknięty przed kontynuowaniem.</s:String>
+    <s:String x:Key="cwc_hint">Niezapisany stan w Wand lub modyfikowanej grze zostanie utracony. Zamknij najpierw grę, jeśli jest uruchomiona.</s:String>
+    <s:String x:Key="cwc_confirm">Wymuś zamknięcie Wand</s:String>
+    <s:String x:Key="cwc_cancel">Anuluj</s:String>
     <!--#endregion -->
 
     <!--#region Runtime log -->

@@ -2,6 +2,7 @@ import type {
     GameStatusPayload,
     InstalledAppSummary,
     InstalledAppsPayload,
+    TelemetryPayload,
     TrainerMetaPayload,
 } from '../../protocol/messages';
 import { readInitialWebSocketUrl } from './remote-session.urls';
@@ -32,6 +33,7 @@ export type RemoteSessionState = {
     pendingWrites: Record<string, PendingWrite>;
     lastError: string | null;
     latencyMs: number | null;
+    telemetry: TelemetryPayload | null;
 };
 
 export type RemoteSessionAction =
@@ -54,6 +56,7 @@ export type RemoteSessionAction =
           message?: string;
       }
     | { type: 'trainerChanged' }
+    | { type: 'telemetry'; payload: TelemetryPayload }
     | { type: 'error'; message: string | null };
 
 export function createInitialRemoteSessionState(): RemoteSessionState {
@@ -68,6 +71,7 @@ export function createInitialRemoteSessionState(): RemoteSessionState {
         pendingWrites: {},
         lastError: null,
         latencyMs: null,
+        telemetry: null,
     };
 }
 
@@ -107,7 +111,10 @@ export function remoteSessionReducer(
                 pendingWrites: {},
                 lastError: null,
                 latencyMs: null,
+                telemetry: null,
             };
+        case 'telemetry':
+            return { ...state, telemetry: action.payload };
         case 'trainerMeta':
             return { ...state, trainerMeta: action.payload, pendingWrites: {} };
         case 'gameStatus':

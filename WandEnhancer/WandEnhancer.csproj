@@ -3,12 +3,13 @@
     <Import Project="..\packages\ILRepack.2.0.41\build\ILRepack.props" Condition="Exists('..\packages\ILRepack.2.0.41\build\ILRepack.props')" />
     <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
     <PropertyGroup>
+        <CscToolPath Condition="'$(CscToolPath)' == '' and Exists('$(MSBuildProjectDirectory)\..\packages\Microsoft.Net.Compilers.Toolset.4.8.0\tasks\net472\csc.exe')">$(MSBuildProjectDirectory)\..\packages\Microsoft.Net.Compilers.Toolset.4.8.0\tasks\net472</CscToolPath>
         <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
         <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
         <ProjectGuid>{106D3E44-ECBB-4EF3-84B2-5FC6BCF77727}</ProjectGuid>
         <OutputType>WinExe</OutputType>
         <RootNamespace>WandEnhancer</RootNamespace>
-        <AssemblyName>WandEnhancer</AssemblyName>
+        <AssemblyName>SovereignTitan</AssemblyName>
         <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
         <FileAlignment>512</FileAlignment>
         <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -93,9 +94,19 @@
         <Compile Include="Core\Patching\Strategies\Supervised\MemoryFuseApplicator.cs" />
         <Compile Include="Core\Patching\Strategies\Supervised\ProcessInfo.cs" />
         <Compile Include="Core\Patching\Strategies\Supervised\SupervisedStrategy.cs" />
+        <Compile Include="Core\Patching\Shared\AsarHeaderHash.cs" />
         <Compile Include="Core\Patching\Strategies\Static\DotNetImage.cs" />
         <Compile Include="Core\Patching\Strategies\Static\AuxTrustNeutralizer.cs" />
+        <Compile Include="Core\Patching\Strategies\Static\AuxFuseIntegrityNeutralizer.cs" />
+        <Compile Include="Core\Patching\Strategies\Static\AsarIntegrityResourcePatch.cs" />
         <Compile Include="Core\Patching\Strategies\Static\StaticStrategy.cs" />
+        <Compile Include="Core\Services\UpdateWatcherService.cs" />
+        <Compile Include="Core\Services\WatcherAutostart.cs" />
+        <Compile Include="Utils\FileRetry.cs" />
+        <Compile Include="Utils\ClipboardRetry.cs" />
+        <Compile Include="View\Popups\CloseWandConfirmPopup.xaml.cs">
+          <DependentUpon>CloseWandConfirmPopup.xaml</DependentUpon>
+        </Compile>
         <Compile Include="Core\UpdateNotifier.cs" Condition="'$(EnableUpdateNotifications)' == 'true'" />
         <Compile Include="View\Popups\UpdatePopup.xaml.cs" Condition="'$(EnableUpdateNotifications)' == 'true'">
           <DependentUpon>UpdatePopup.xaml</DependentUpon>
@@ -115,6 +126,7 @@
         <Compile Include="Utils\WeModInstalls.cs" />
         <Compile Include="Utils\FirewallHelper.cs" />
         <Compile Include="Utils\DiagnosticsHelper.cs" />
+        <Compile Include="Utils\AutoDoctorHelper.cs" />
         <Compile Include="View\Controls\PopupHost.xaml.cs">
           <DependentUpon>PopupHost.xaml</DependentUpon>
         </Compile>
@@ -152,6 +164,7 @@
         <Page Include="View\Controls\PopupHost.xaml" />
         <Page Include="View\MainWindow\MainWindow.xaml" />
         <Page Include="View\Popups\PatchVectorsPopup.xaml" />
+        <Page Include="View\Popups\CloseWandConfirmPopup.xaml" />
         <Page Include="View\Popups\UpdatePopup.xaml" Condition="'$(EnableUpdateNotifications)' == 'true'" />
         <Page Include="View\Popups\SettingsPopup.xaml" />
     </ItemGroup>
@@ -208,7 +221,7 @@
          every candidate for one version reports the same number, and everyone builds their own
          binary. Empty when there is no git to ask, which Constants reports as unofficial. -->
     <Target Name="StampBuild" BeforeTargets="CoreCompile">
-        <Exec Command="git -C &quot;$(MSBuildProjectDirectory)&quot; describe --always --dirty --match=nothing 2&gt;nul"
+        <Exec Command="chcp 65001 &gt;nul &amp; git describe --always --dirty --match=nothing 2&gt;nul"
               ConsoleToMSBuild="true" ContinueOnError="true"
               StandardOutputImportance="low" IgnoreStandardErrorWarningFormat="true">
             <Output TaskParameter="ConsoleOutput" PropertyName="BuildStamp" />

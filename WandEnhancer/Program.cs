@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -28,6 +28,9 @@ namespace WandEnhancer
             AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
             TaskScheduler.UnobservedTaskException += OnUnobservedTaskException;
 
+            if (TryWatchMode(args))
+                return;
+
             if (TryLaunchMode(args))
                 return;
 
@@ -43,6 +46,22 @@ namespace WandEnhancer
 
             application.MainWindow = window;
             application.Run();
+        }
+
+        /// <summary>
+        /// Background-watcher mode: <c>--watch-updates &lt;squirrelRoot&gt;</c>. Blocks until told to
+        /// stop; never touches the UI. Deployed and started by
+        /// <see cref="Core.Services.WatcherAutostart"/>, not something a user runs by hand.
+        /// </summary>
+        private static bool TryWatchMode(string[] args)
+        {
+            if (args.Length < 2 || !string.Equals(args[0], "--watch-updates", StringComparison.OrdinalIgnoreCase))
+                return false;
+
+            string squirrelRoot = args[1];
+            LauncherLog.Open(squirrelRoot, $"SovereignTitanWatcher {Constants.Version} build {Constants.Build} | root {squirrelRoot}");
+            Core.Services.UpdateWatcherService.Run(squirrelRoot, LauncherLog.Write);
+            return true;
         }
 
         private static bool TryLaunchMode(string[] args)
@@ -205,7 +224,7 @@ namespace WandEnhancer
             var error = e.ExceptionObject as Exception;
             MessageBox.Show(
                 error?.Message ?? e.ExceptionObject?.ToString() ?? "Unknown error",
-                Constants.RepoName,
+                Constants.BrandName,
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
             Environment.Exit(1);

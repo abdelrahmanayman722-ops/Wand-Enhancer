@@ -28,12 +28,13 @@ describe('production bridge runtime', () => {
 
         try {
             await waitUntil(() => runtime.listening);
-            const messages = await connectAndCollect(port, 4);
+            const messages = await connectAndCollect(port, 5, runtime.pairingToken);
             expect(messages.map((message) => message.type)).toEqual([
                 'hello_ack',
                 'trainer_meta',
                 'trainer_values',
                 'installed_apps',
+                'telemetry',
             ]);
             expect(messages[2].payload.values.god).toBe(true);
             expect(JSON.stringify(messages)).not.toContain('wand-secret');
@@ -69,21 +70,21 @@ describe('production bridge runtime', () => {
         }
     });
 
-    it('generates and includes a session token in advertised URLs', async () => {
+    it('generates and includes a pairing token in advertised URLs', async () => {
         const bridge = require('../../dist/bridge.cjs');
         const port = await getFreePort();
         const runtime = bridge.createBridgeRuntime({ host: '127.0.0.1', port, maxPort: port });
 
         try {
             await waitUntil(() => runtime.listening);
-            expect(typeof runtime.sessionToken).toBe('string');
-            expect(runtime.sessionToken.length).toBeGreaterThan(0);
-            expect(runtime.remoteUrl).toContain(`token=${runtime.sessionToken}`);
+            expect(typeof runtime.pairingToken).toBe('string');
+            expect(runtime.pairingToken.length).toBeGreaterThan(0);
+            expect(runtime.remoteUrl).toContain(`token=${runtime.pairingToken}`);
             for (const url of runtime.advertisedUrls) {
-                expect(url).toContain(`token=${runtime.sessionToken}`);
+                expect(url).toContain(`token=${runtime.pairingToken}`);
             }
 
-            const messages = await connectAndCollect(port, 2, `?token=${runtime.sessionToken}`);
+            const messages = await connectAndCollect(port, 2, runtime.pairingToken);
             expect(messages[0].type).toBe('hello_ack');
         } finally {
             runtime.close();
@@ -140,10 +141,14 @@ async function getFreePort(): Promise<number> {
     });
 }
 
-async function connectAndCollect(port: number, count: number, query = ''): Promise<any[]> {
+async function connectAndCollect(
+    port: number,
+    count: number,
+    pairingToken: string,
+): Promise<any[]> {
     return await new Promise((resolve, reject) => {
         const messages: any[] = [];
-        const socket = new NodeWebSocket(`ws://127.0.0.1:${port}/remote/ws${query}`);
+        const socket = new NodeWebSocket(`ws://127.0.0.1:${port}/remote/ws`);
         socket.once('error', reject);
         socket.once('open', () =>
             socket.send(
@@ -154,6 +159,7 @@ async function connectAndCollect(port: number, count: number, query = ''): Promi
                     payload: {
                         client: 'mobile-web',
                         clientVersion: 'test',
+                        pairingToken,
                         capabilities: { supportsDeltaValues: true, supportsTrainerSwitch: true },
                     },
                 }),

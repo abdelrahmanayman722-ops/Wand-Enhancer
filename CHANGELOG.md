@@ -3,6 +3,28 @@
 This file is the source of truth for release notes.
 The newest entry must match the version in `WandEnhancer/Properties/AssemblyInfo.cs`.
 
+## [2.3.0.0] - 2026-10-16
+
+### Brand & Architectural Sovereignty
+
+- **SovereignTitan Flagship Architecture.** Authored and architected by Abdelrahman Ayman (`@abdelrahmanayman722-ops`), transforming the engine into an elite cyberpunk desktop modding solution with native assembly identity (`SovereignTitan.exe`).
+- **Cyberpunk Obsidian & Neon Cyan Visual Aesthetic.** Complete visual overhaul featuring a deep dark obsidian backdrop (`#070A13`), glowing cyan accents (`#00F0FF`), refined dark glass cards, and glowing borders.
+
+### Diagnostics & Self-Healing
+
+- **Integrated Auto-Doctor & Environment Fixer.** One-click self-healing engine in the desktop client (`AutoDoctorHelper.cs`) that automatically detects and releases background process locks, clears restrictive Windows file attributes (ReadOnly flags), configures Windows Firewall rules for port 3223, and validates pristine ASAR backup integrity.
+
+### Telemetry & Real-Time Monitoring
+
+- **Live Hardware & Telemetry HUD.** Embedded real-time telemetry component (`TelemetryHUD.tsx`) streaming connection latency (Ping in ms), real-time CPU utilization with dynamic load bars, and active RAM consumption directly to the mobile remote panel.
+
+### Wand 12.61 / 12.62+ Zero-Fail Compatibility
+
+- **In-Place ASAR Integrity PE Resource Patching.** `AsarIntegrityResourcePatch` computes the SHA256 header hash of the patched `app.asar` and updates `Wand.exe` PE resource `ElectronAsar\Integrity` in-place, preventing application crashes on modern builds.
+- **Auxiliary Service Integrity Neutralization.** `AuxFuseIntegrityNeutralizer` bypasses all 3 independent runtime integrity checks in `WandAuxiliaryService.exe` to allow seamless trainer DLL injection.
+- **Resilient File Access & Clipboard Retries.** Introduced `FileRetry` with exponential backoff on file locks, and `ClipboardRetry` mitigating native Windows `CLIPBRD_E_CANT_OPEN` errors.
+- **Background Update Detection.** Integrated `UpdateWatcherService` and `WatcherAutostart` to automatically detect client updates and re-apply modifications seamlessly.
+
 ## [2.2.0.0] - 2026-10-08
 
 ### Security

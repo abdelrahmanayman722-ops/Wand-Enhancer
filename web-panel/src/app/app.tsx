@@ -5,6 +5,7 @@ import { Trans } from '@lingui/react/macro';
 import { FloatingDock } from '@/app/ui/FloatingDock';
 import { SessionPlaceholder } from '@/app/ui/SessionPlaceholder';
 import { SettingsDrawer } from '@/app/ui/SettingsDrawer';
+import { TelemetryHUD } from '@/app/ui/TelemetryHUD';
 import { TopBar } from '@/app/ui/TopBar';
 import { LibraryDrawer } from '@/library/ui/LibraryDrawer';
 import { Drawer } from '@/shared/ui/Drawer';
@@ -55,12 +56,19 @@ export const App = () => {
                                             library.togglePin(library.currentGame)
                                         }
                                     />
+                                    <TelemetryHUD
+                                        status={session.status}
+                                        latencyMs={session.latencyMs}
+                                        telemetry={session.telemetry}
+                                    />
                                     <QuickActions
                                         presets={trainer.presets}
                                         onAddPreset={trainer.addPreset}
                                         onApplyPreset={trainer.applyPreset}
                                         onDeletePreset={trainer.deletePreset}
                                         onPanic={trainer.panic}
+                                        onExportPresets={trainer.exportPresets}
+                                        onImportPresets={trainer.importPresets}
                                     />
                                     <div className="sticky top-0 z-10 -mx-3.5 mb-2.5 px-3.5 py-0.5">
                                         <SearchInput

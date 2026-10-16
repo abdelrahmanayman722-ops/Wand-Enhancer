@@ -16,6 +16,10 @@ namespace WandEnhancer.View.MainWindow
         public MainWindow()
         {
             InitializeComponent();
+            if (Core.Services.LocalizationManager.CurrentLanguage?.TextInfo.IsRightToLeft == true)
+            {
+                this.FlowDirection = FlowDirection.RightToLeft;
+            }
             this.ViewModel = new MainWindowVm(this, new WindowsFileDialogs());
             this.DataContext = ViewModel;
             VersionLabel.Text = Constants.Version.ToString();

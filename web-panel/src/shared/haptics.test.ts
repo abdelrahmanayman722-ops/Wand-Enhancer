@@ -29,4 +29,3 @@ describe('haptics', () => {
         expect(() => triggerHaptic()).not.toThrow();
     });
 });
-

@@ -12,8 +12,9 @@
     <s:String x:Key="mw_patch">تعزيز وتعديل</s:String>
     <s:String x:Key="mw_restore">استعادة الأصلي</s:String>
     <s:String x:Key="mw_source_code">المصدر البرمجي</s:String>
-    <s:String x:Key="mw_made_by">صُنع بـ ❤️ بواسطة k1tbyte</s:String>
+    <s:String x:Key="mw_made_by">تم التطوير والتعريب بـ ❤️ بواسطة عبد الرحمن أيمن (@abdelrahmanayman722-ops)</s:String>
     <s:String x:Key="mw_star_hint">ضع نجمة على المستودع إذا أعجبك المشروع ;)</s:String>
+    <s:String x:Key="mw_auto_doctor">فحص وإصلاح النظام التلقائي (Auto-Doctor)</s:String>
     <s:String x:Key="mw_copy_logs">نسخ السجلات للحافظة</s:String>
     <s:String x:Key="mw_export_logs">تصدير السجلات لملف</s:String>
     <s:String x:Key="mw_update_badge">يتوفر إصدار جديد</s:String>
@@ -24,6 +25,7 @@
     <s:String x:Key="settings_language">اللغة</s:String>
     <s:String x:Key="settings_check_updates">التحقق من التحديثات عند بدء التشغيل</s:String>
     <s:String x:Key="settings_check_prereleases">تنبيه أيضاً بالإصدارات التجريبية (Pre-releases)</s:String>
+    <s:String x:Key="settings_run_auto_doctor">إصلاح بيئة النظام ذاتياً بضغطة زر (Auto-Doctor)</s:String>
     <s:String x:Key="settings_configure_firewall">إعداد جدار الحماية (منفذ 3223)</s:String>
     <s:String x:Key="settings_run_diagnostics">تشخيص وفحص النظام</s:String>
     <s:String x:Key="settings_save">حفظ</s:String>
@@ -31,7 +33,7 @@
 
     <!--#region UpdatePopup -->
     <s:String x:Key="up_popup_title">تحديث متوفر</s:String>
-    <s:String x:Key="up_warning">أداة WandEnhancer لا تُحدّث نفسها تلقائياً أبداً. قم ببناء الإصدار الجديد من المستودع الخاص بك أو افتح صفحة الإصدارات.</s:String>
+    <s:String x:Key="up_warning">أداة سوفيرين تيتان (SovereignTitan) لا تُحدّث نفسها تلقائياً أبداً. قم ببناء الإصدار الجديد أو افتح صفحة الإصدارات.</s:String>
     <s:String x:Key="up_current_version">الحالي:</s:String>
     <s:String x:Key="up_latest_version">الأحدث:</s:String>
     <s:String x:Key="up_release_notes">ملاحظات الإصدار</s:String>
@@ -59,6 +61,14 @@
     <s:String x:Key="pv_strategy_static">تعديل ثابت Static (موصى به)</s:String>
     <s:String x:Key="pv_strategy_supervised">تعديل حي بالذاكرة Supervised</s:String>
     <s:String x:Key="pv_strategy_hint">الطريقة الثابتة تعدل ملف Wand على القرص، مما يلغي التوقيع الرقمي. طريقة الذاكرة تقوم بالترقيع في RAM عند كل تشغيل (قد تنبه مضادات الفيروسات في بعض الأجهزة).</s:String>
+    <!--#endregion -->
+
+    <!--#region CloseWandConfirmPopup -->
+    <s:String x:Key="cwc_popup_title">تطبيق Wand قيد التشغيل</s:String>
+    <s:String x:Key="cwc_message">يجب إغلاق {0} قبل المتابعة.</s:String>
+    <s:String x:Key="cwc_hint">سيتم فقدان أي حالة غير محفوظة في Wand أو في اللعبة المعدلة. يرجى إغلاق اللعبة أولاً إن كانت تعمل.</s:String>
+    <s:String x:Key="cwc_confirm">إغلاق إجباري لتطبيق Wand</s:String>
+    <s:String x:Key="cwc_cancel">إلغاء</s:String>
     <!--#endregion -->
 
     <!--#region Runtime log -->

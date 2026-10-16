@@ -12,16 +12,37 @@
     <s:String x:Key="mw_patch">增强</s:String>
     <s:String x:Key="mw_restore">恢复</s:String>
     <s:String x:Key="mw_source_code">源代码</s:String>
-    <s:String x:Key="mw_made_by">由 k1tbyte 用 ❤️ 制作</s:String>
+    <s:String x:Key="mw_made_by">由 Abdelrahman Ayman (@abdelrahmanayman722-ops) 用 ❤️ 制作</s:String>
     <s:String x:Key="mw_star_hint">如果这对您有帮助，请给个星标 ;)</s:String>
+    <s:String x:Key="mw_auto_doctor">自动诊断与环境修复</s:String>
     <s:String x:Key="mw_copy_logs">复制日志到剪贴板</s:String>
     <s:String x:Key="mw_export_logs">将日志导出到文件</s:String>
+    <s:String x:Key="mw_update_badge">有新版本可用</s:String>
     <!--#endregion -->
 
     <!--#region Settings -->
     <s:String x:Key="settings_title">设置</s:String>
     <s:String x:Key="settings_language">语言</s:String>
+    <s:String x:Key="settings_check_updates">启动时检查更新</s:String>
+    <s:String x:Key="settings_check_prereleases">包含预发布版本通知</s:String>
+    <s:String x:Key="settings_run_auto_doctor">一键自动诊断与环境修复</s:String>
+    <s:String x:Key="settings_configure_firewall">配置 Windows 防火墙 (端口 3223)</s:String>
+    <s:String x:Key="settings_run_diagnostics">运行系统诊断</s:String>
     <s:String x:Key="settings_save">保存</s:String>
+    <!--#endregion -->
+
+    <!--#region UpdatePopup -->
+    <s:String x:Key="up_popup_title">发现新版本</s:String>
+    <s:String x:Key="up_warning">SovereignTitan 从不自动更新。请在您的分支中编译新版本，或打开发布页面。</s:String>
+    <s:String x:Key="up_current_version">当前版本:</s:String>
+    <s:String x:Key="up_latest_version">最新版本:</s:String>
+    <s:String x:Key="up_release_notes">发布说明</s:String>
+    <s:String x:Key="up_show_more">显示完整更新日志</s:String>
+    <s:String x:Key="up_show_less">显示发布说明</s:String>
+    <s:String x:Key="up_loading_changelog">加载中...</s:String>
+    <s:String x:Key="up_changelog_failed">无法加载完整更新日志。</s:String>
+    <s:String x:Key="up_release_notes_unavailable">未发布更新说明。</s:String>
+    <s:String x:Key="up_open_release">打开发布页面</s:String>
     <!--#endregion -->
 
     <!--#region EnhanceVectorsPopup -->
@@ -40,6 +61,14 @@
     <s:String x:Key="pv_strategy_supervised">Supervised</s:String>
     <s:String x:Key="pv_strategy_hint">Static 会修改磁盘上的 Wand，从而破坏其数字签名。Supervised 在每次启动时于内存中打补丁 - 可能触发杀毒软件，并且在某些环境下可能无法运行。</s:String>
     <s:String x:Key="pv_popup_title">我们要增强什么？</s:String>
+    <!--#endregion -->
+
+    <!--#region CloseWandConfirmPopup -->
+    <s:String x:Key="cwc_popup_title">Wand 正在运行</s:String>
+    <s:String x:Key="cwc_message">必须先关闭 {0} 才能继续。</s:String>
+    <s:String x:Key="cwc_hint">Wand 或修改过的游戏中的未保存状态都将丢失。如果有游戏正在运行，请先关闭游戏。</s:String>
+    <s:String x:Key="cwc_confirm">强制关闭 Wand</s:String>
+    <s:String x:Key="cwc_cancel">取消</s:String>
     <!--#endregion -->
 
     <!--#region Runtime log -->

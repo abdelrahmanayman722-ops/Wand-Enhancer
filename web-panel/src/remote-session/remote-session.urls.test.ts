@@ -1,19 +1,19 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
+    readInitialPairingToken,
     readInitialWebSocketUrl,
-    readSessionToken,
-    TOKEN_STORAGE_KEY,
+    TOKEN_QUERY_PARAM,
     WS_QUERY_PARAM,
 } from './remote-session.urls';
 
 describe('remote-session.urls', () => {
     beforeEach(() => {
-        sessionStorage.clear();
+        window.localStorage.clear();
         window.history.replaceState({}, '', '/');
     });
 
     afterEach(() => {
-        sessionStorage.clear();
+        window.localStorage.clear();
         window.history.replaceState({}, '', '/');
     });
 
@@ -28,31 +28,17 @@ describe('remote-session.urls', () => {
         expect(readInitialWebSocketUrl()).toBe('ws://192.168.1.100:9999/custom');
     });
 
-    it('extracts token from url and persists it in sessionStorage', () => {
-        window.history.replaceState({}, '', '/?token=secret123');
-        const token = readSessionToken();
+    it('extracts pairing token from url and persists it in localStorage', () => {
+        window.history.replaceState({}, '', `/?${TOKEN_QUERY_PARAM}=secret123`);
+        const token = readInitialPairingToken();
         expect(token).toBe('secret123');
-        expect(sessionStorage.getItem(TOKEN_STORAGE_KEY)).toBe('secret123');
-
-        const wsUrl = readInitialWebSocketUrl();
-        expect(wsUrl).toContain('token=secret123');
+        expect(window.localStorage.getItem('wand-remote.pairing-token.v1')).toBe('secret123');
     });
 
-    it('reads token from sessionStorage if absent in url', () => {
-        sessionStorage.setItem(TOKEN_STORAGE_KEY, 'stored_token_abc');
+    it('reads pairing token from localStorage if absent in url', () => {
+        window.localStorage.setItem('wand-remote.pairing-token.v1', 'stored_token_abc');
         window.history.replaceState({}, '', '/');
 
-        expect(readSessionToken()).toBe('stored_token_abc');
-        const wsUrl = readInitialWebSocketUrl();
-        expect(wsUrl).toContain('token=stored_token_abc');
-    });
-
-    it('appends token to explicit ws parameter if token exists and not already present in parameter', () => {
-        sessionStorage.setItem(TOKEN_STORAGE_KEY, 'my-auth-token');
-        window.history.replaceState({}, '', `/?${WS_QUERY_PARAM}=ws://192.168.1.5:3223/remote/ws`);
-
-        const wsUrl = readInitialWebSocketUrl();
-        expect(wsUrl).toBe('ws://192.168.1.5:3223/remote/ws?token=my-auth-token');
+        expect(readInitialPairingToken()).toBe('stored_token_abc');
     });
 });
-

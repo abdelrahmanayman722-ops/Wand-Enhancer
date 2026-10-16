@@ -73,6 +73,12 @@ namespace WandEnhancer.View.Popups
             MainWindow.MainWindow.Instance?.ClosePopup();
         }
 
+        private void OnRunAutoDoctorClick(object sender, RoutedEventArgs e)
+        {
+            MainWindow.MainWindow.Instance?.ViewModel?.RunAutoDoctor();
+            MainWindow.MainWindow.Instance?.ClosePopup();
+        }
+
         private void OnConfigureFirewallClick(object sender, RoutedEventArgs e)
         {
             MainWindow.MainWindow.Instance?.ViewModel?.ConfigureFirewall();

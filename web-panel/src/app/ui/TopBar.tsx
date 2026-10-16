@@ -29,7 +29,7 @@ export const TopBar = ({ status, currentGame, runningTrainer, onOpenSettings }: 
                 />
                 <div className="min-w-0 flex-1">
                     <div className="font-mono text-[9.5px] font-bold tracking-[0.16em] text-(--deck-fg-4)">
-                        WAND · REMOTE DECK
+                        SOVEREIGN TITAN · REMOTE DECK
                     </div>
                     <div className="mt-0.5 flex min-w-0 items-center gap-1.5">
                         <span className="min-w-0 truncate text-sm font-semibold text-(--deck-fg)">

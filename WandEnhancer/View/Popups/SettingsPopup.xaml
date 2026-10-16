@@ -60,6 +60,12 @@
         </StackPanel>
 
         <StackPanel Grid.Row="2" Margin="0 0 0 10">
+            <Button Padding="0 6 0 6" Margin="0 0 0 6"
+                    FontWeight="SemiBold"
+                    Foreground="{DynamicResource Primary}"
+                    BorderBrush="{DynamicResource Primary}"
+                    Content="{DynamicResource settings_run_auto_doctor}"
+                    Click="OnRunAutoDoctorClick" />
             <Button Padding="0 5 0 5" Margin="0 0 0 6"
                     Content="{DynamicResource settings_configure_firewall}"
                     Click="OnConfigureFirewallClick" />

@@ -12,16 +12,37 @@
     <s:String x:Key="mw_patch">Застосувати</s:String>
     <s:String x:Key="mw_restore">Відновити</s:String>
     <s:String x:Key="mw_source_code">Вихідний код</s:String>
-    <s:String x:Key="mw_made_by">Зроблено з ❤️ by k1tbyte</s:String>
+    <s:String x:Key="mw_made_by">Зроблено з ❤️ Abdelrahman Ayman (@abdelrahmanayman722-ops)</s:String>
     <s:String x:Key="mw_star_hint">Поставте зірку, якщо це було корисно ;)</s:String>
+    <s:String x:Key="mw_auto_doctor">Auto-Doctor та виправлення середовища</s:String>
     <s:String x:Key="mw_copy_logs">Скопіювати логи до буфера обміну</s:String>
     <s:String x:Key="mw_export_logs">Експортувати логи у файл</s:String>
+    <s:String x:Key="mw_update_badge">Доступна нова версія</s:String>
     <!--#endregion -->
 
     <!--#region Settings -->
     <s:String x:Key="settings_title">Налаштування</s:String>
     <s:String x:Key="settings_language">Мова</s:String>
+    <s:String x:Key="settings_check_updates">Перевіряти оновлення під час запуску</s:String>
+    <s:String x:Key="settings_check_prereleases">Також сповіщати про попередні версії</s:String>
+    <s:String x:Key="settings_run_auto_doctor">Auto-Doctor та виправлення середовища (1 клік)</s:String>
+    <s:String x:Key="settings_configure_firewall">Налаштувати брандмауер Windows (Порт 3223)</s:String>
+    <s:String x:Key="settings_run_diagnostics">Запустити діагностику системи</s:String>
     <s:String x:Key="settings_save">Зберегти</s:String>
+    <!--#endregion -->
+
+    <!--#region UpdatePopup -->
+    <s:String x:Key="up_popup_title">Доступне оновлення</s:String>
+    <s:String x:Key="up_warning">SovereignTitan ніколи не оновлюється автоматично. Зберіть нову версію у своєму форку або відкрийте сторінку релізів.</s:String>
+    <s:String x:Key="up_current_version">Поточна:</s:String>
+    <s:String x:Key="up_latest_version">Остання:</s:String>
+    <s:String x:Key="up_release_notes">Примітки до випуску</s:String>
+    <s:String x:Key="up_show_more">Показати повний список змін</s:String>
+    <s:String x:Key="up_show_less">Показати примітки до випуску</s:String>
+    <s:String x:Key="up_loading_changelog">Завантаження...</s:String>
+    <s:String x:Key="up_changelog_failed">Не вдалося завантажити повний список змін.</s:String>
+    <s:String x:Key="up_release_notes_unavailable">Примітки до випуску не опубліковано.</s:String>
+    <s:String x:Key="up_open_release">Відкрити сторінку релізу</s:String>
     <!--#endregion -->
 
     <!--#region EnhanceVectorsPopup -->
@@ -40,6 +61,14 @@
     <s:String x:Key="pv_strategy_supervised">Supervised</s:String>
     <s:String x:Key="pv_strategy_hint">Static змінює файли Wand на диску та ламає цифровий підпис. Supervised патчить у пам'яті під час кожного запуску - може спрацьовувати антивірус і працює не всюди.</s:String>
     <s:String x:Key="pv_popup_title">Що будемо покращувати?</s:String>
+    <!--#endregion -->
+
+    <!--#region CloseWandConfirmPopup -->
+    <s:String x:Key="cwc_popup_title">Wand запущено</s:String>
+    <s:String x:Key="cwc_message">{0} потрібно закрити перед продовженням.</s:String>
+    <s:String x:Key="cwc_hint">Будь-які незбережені дані у Wand або в модифікованій грі буде втрачено. Спочатку закрийте гру, якщо вона запущена.</s:String>
+    <s:String x:Key="cwc_confirm">Примусово закрити Wand</s:String>
+    <s:String x:Key="cwc_cancel">Скасувати</s:String>
     <!--#endregion -->
 
     <!--#region Runtime log -->

@@ -1,8 +1,7 @@
 import { msg } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react';
-
-import { Icon } from '@/shared/ui/Icon';
 import { triggerHaptic } from '@/shared/haptics';
+import { Icon } from '@/shared/ui/Icon';
 
 import type { ControlInternalProps } from './shared';
 

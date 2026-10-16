@@ -11,6 +11,36 @@ namespace WandEnhancer.Utils
         private const int KillAttempts = 5;
         private const int KillRetryDelayMs = 250;
 
+        /// <summary>Whether any target process (WeMod, Wand, or brand) other than this one is running.</summary>
+        public static bool IsRunning(string processName)
+        {
+            int selfId = Process.GetCurrentProcess().Id;
+            var targets = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "WeMod", "Wand" };
+            if (!string.IsNullOrEmpty(processName))
+            {
+                targets.Add(processName);
+            }
+
+            var processes = targets
+                .SelectMany(name => Process.GetProcessesByName(name))
+                .Where(p => p.Id != selfId)
+                .GroupBy(p => p.Id)
+                .Select(g => g.First())
+                .ToArray();
+
+            try
+            {
+                return processes.Length > 0;
+            }
+            finally
+            {
+                foreach (var process in processes)
+                {
+                    process.Dispose();
+                }
+            }
+        }
+
         public static void TryKillProcess(string processName)
         {
             // The launcher itself runs as Wand.exe; never target our own process.

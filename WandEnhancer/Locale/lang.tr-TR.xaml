@@ -12,16 +12,37 @@
     <s:String x:Key="mw_patch">Uygula</s:String>
     <s:String x:Key="mw_restore">Geri Yükle</s:String>
     <s:String x:Key="mw_source_code">Kaynak kodu</s:String>
-    <s:String x:Key="mw_made_by">k1tbyte tarafından ❤️ ile yapıldı</s:String>
+    <s:String x:Key="mw_made_by">Abdelrahman Ayman (@abdelrahmanayman722-ops) tarafından ❤️ ile yapıldı</s:String>
     <s:String x:Key="mw_star_hint">Yardımcı olduysa yıldız verin ;)</s:String>
+    <s:String x:Key="mw_auto_doctor">Auto-Doctor ve Ortam Onarıcı</s:String>
     <s:String x:Key="mw_copy_logs">Günlükleri panoya kopyala</s:String>
     <s:String x:Key="mw_export_logs">Günlükleri dosyaya aktar</s:String>
+    <s:String x:Key="mw_update_badge">Yeni sürüm mevcut</s:String>
     <!--#endregion -->
 
     <!--#region Settings -->
     <s:String x:Key="settings_title">Ayarlar</s:String>
     <s:String x:Key="settings_language">Dil</s:String>
+    <s:String x:Key="settings_check_updates">Başlangıçta güncellemeleri denetle</s:String>
+    <s:String x:Key="settings_check_prereleases">Ön sürümler hakkında da bildirim gönder</s:String>
+    <s:String x:Key="settings_run_auto_doctor">Auto-Doctor ve Ortam Onarımı (Tek Tıkla)</s:String>
+    <s:String x:Key="settings_configure_firewall">Windows Güvenlik Duvarını Yapılandır (Port 3223)</s:String>
+    <s:String x:Key="settings_run_diagnostics">Sistem Tanılamasını Çalıştır</s:String>
     <s:String x:Key="settings_save">Kaydet</s:String>
+    <!--#endregion -->
+
+    <!--#region UpdatePopup -->
+    <s:String x:Key="up_popup_title">Güncelleme mevcut</s:String>
+    <s:String x:Key="up_warning">SovereignTitan kendini asla otomatik güncellemez. Yeni sürümü kendi forkunuzda derleyin veya sürüm sayfasını açın.</s:String>
+    <s:String x:Key="up_current_version">Mevcut:</s:String>
+    <s:String x:Key="up_latest_version">En son:</s:String>
+    <s:String x:Key="up_release_notes">Sürüm notları</s:String>
+    <s:String x:Key="up_show_more">Tüm değişiklik günlüğünü göster</s:String>
+    <s:String x:Key="up_show_less">Sürüm notlarını göster</s:String>
+    <s:String x:Key="up_loading_changelog">Yükleniyor...</s:String>
+    <s:String x:Key="up_changelog_failed">Tüm değişiklik günlüğü yüklenemedi.</s:String>
+    <s:String x:Key="up_release_notes_unavailable">Sürüm notu yayınlanmadı.</s:String>
+    <s:String x:Key="up_open_release">Sürüm sayfasını aç</s:String>
     <!--#endregion -->
 
     <!--#region EnhanceVectorsPopup -->
@@ -40,6 +61,14 @@
     <s:String x:Key="pv_strategy_supervised">Supervised</s:String>
     <s:String x:Key="pv_strategy_hint">Static, Wand'ı diskte düzenler ve dijital imzasını bozar. Supervised her başlatmada bellekte yama uygular - antivirüsü tetikleyebilir ve her kurulumda çalışmayabilir.</s:String>
     <s:String x:Key="pv_popup_title">Neyi geliştireceğiz?</s:String>
+    <!--#endregion -->
+
+    <!--#region CloseWandConfirmPopup -->
+    <s:String x:Key="cwc_popup_title">Wand çalışıyor</s:String>
+    <s:String x:Key="cwc_message">Devam etmeden önce {0} kapatılmalıdır.</s:String>
+    <s:String x:Key="cwc_hint">Wand'da veya üzerinde değişiklik yapılan oyundaki kaydedilmemiş durumlar kaybolacaktır. Çalışıyorsa önce oyunu kapatın.</s:String>
+    <s:String x:Key="cwc_confirm">Wand'ı kapatmaya zorla</s:String>
+    <s:String x:Key="cwc_cancel">İptal</s:String>
     <!--#endregion -->
 
     <!--#region Runtime log -->

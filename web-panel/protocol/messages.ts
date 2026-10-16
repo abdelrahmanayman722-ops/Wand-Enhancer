@@ -190,6 +190,8 @@ export type HelloMessage = MessageEnvelope<
     {
         client: 'mobile-web';
         clientVersion: string;
+        /** Proves this device scanned the bridge's QR/pairing link. Empty when never paired. */
+        pairingToken: string;
         capabilities: {
             supportsDeltaValues: boolean;
             supportsTrainerSwitch: boolean;
@@ -222,6 +224,15 @@ export type RemoteCommandResultMessage = MessageEnvelope<
 >;
 export type ErrorMessage = MessageEnvelope<'error', ErrorPayload>;
 
+export interface TelemetryPayload {
+    cpuPercent: number;
+    memoryUsedMb: number;
+    memoryTotalMb: number;
+    timestamp: number;
+}
+
+export type TelemetryMessage = MessageEnvelope<'telemetry', TelemetryPayload>;
+
 export type IncomingMessage =
     | HelloAckMessage
     | TrainerMetaMessage
@@ -232,6 +243,7 @@ export type IncomingMessage =
     | TrainerChangedMessage
     | SetValueResultMessage
     | RemoteCommandResultMessage
+    | TelemetryMessage
     | ErrorMessage;
 
 export type OutgoingMessage = HelloMessage | SetValueMessage | RemoteCommandMessage;

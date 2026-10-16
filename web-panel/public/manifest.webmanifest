@@ -1,12 +1,12 @@
 {
-  "name": "Wand Remote Deck",
-  "short_name": "Wand",
-  "description": "Advanced mobile remote control deck for Wand and WeMod trainers",
+  "name": "Sovereign Titan Remote Deck",
+  "short_name": "SovereignTitan",
+  "description": "Elite Cyberpunk mobile remote deck & hardware HUD for Wand & WeMod trainers by Abdelrahman Ayman",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#050608",
-  "theme_color": "#050608",
+  "background_color": "#070A13",
+  "theme_color": "#00F0FF",
   "orientation": "portrait",
   "icons": [
     {
@@ -17,4 +17,3 @@
     }
   ]
 }
-

@@ -6,6 +6,16 @@ param(
 
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
+if (-not (Get-Command 'node' -ErrorAction SilentlyContinue)) {
+    $adobeNode = 'C:\Program Files\Common Files\Adobe\Creative Cloud Libraries\libs'
+    if (Test-Path (Join-Path $adobeNode 'node.exe')) {
+        $env:PATH = "$adobeNode;$env:PATH"
+    }
+    $pwNode = 'C:\Users\pc\AppData\Roaming\ProjectLightningV5\resources\binaries\win\python\Lib\site-packages\playwright\driver'
+    if (Test-Path (Join-Path $pwNode 'node.exe')) {
+        $env:PATH = "$pwNode;$env:PATH"
+    }
+}
 $repoRoot = Split-Path -Parent $PSScriptRoot
 $assembly = [Reflection.Assembly]::LoadFrom((Resolve-Path -LiteralPath $AssemblyPath).Path)
 $configType = $assembly.GetType('WandEnhancer.Core.EnhancerConfig', $true)
@@ -14,6 +24,7 @@ $applierType = $assembly.GetType('WandEnhancer.Core.JavaScriptPatchApplier', $tr
 $canSearchFile = $applierType.GetMethod('CanSearchFile')
 $scratch = Join-Path ([IO.Path]::GetTempPath()) ('wand-locators-' + [guid]::NewGuid().ToString('N'))
 [IO.Directory]::CreateDirectory($scratch) | Out-Null
+[IO.File]::WriteAllText((Join-Path $scratch 'package.json'), '{"type": "module"}')
 $utf8 = New-Object Text.UTF8Encoding($false)
 
 function Test-Bundles([string]$Name, [IO.FileInfo[]]$Files, [string]$Output) {

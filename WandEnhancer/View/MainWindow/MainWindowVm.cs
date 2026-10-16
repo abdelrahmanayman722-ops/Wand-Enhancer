@@ -50,7 +50,13 @@ namespace WandEnhancer.View.MainWindow
         public bool IsPatchEnabled
         {
             get => _isPatchEnabled;
-            set => SetProperty(ref _isPatchEnabled, value);
+            set
+            {
+                if (SetProperty(ref _isPatchEnabled, value))
+                {
+                    System.Windows.Input.CommandManager.InvalidateRequerySuggested();
+                }
+            }
         }
 
         private bool _alreadyPatched;
@@ -58,7 +64,13 @@ namespace WandEnhancer.View.MainWindow
         public bool AlreadyPatched
         {
             get => _alreadyPatched;
-            set => SetProperty(ref _alreadyPatched, value);
+            set
+            {
+                if (SetProperty(ref _alreadyPatched, value))
+                {
+                    System.Windows.Input.CommandManager.InvalidateRequerySuggested();
+                }
+            }
         }
 
         private bool _canRestore;
@@ -66,7 +78,13 @@ namespace WandEnhancer.View.MainWindow
         public bool CanRestore
         {
             get => _canRestore;
-            set => SetProperty(ref _canRestore, value);
+            set
+            {
+                if (SetProperty(ref _canRestore, value))
+                {
+                    System.Windows.Input.CommandManager.InvalidateRequerySuggested();
+                }
+            }
         }
 
         private bool _isBusy;
@@ -80,6 +98,7 @@ namespace WandEnhancer.View.MainWindow
                 if (SetProperty(ref _isBusy, value))
                 {
                     OnPropertyChanged(nameof(IsIdle));
+                    System.Windows.Input.CommandManager.InvalidateRequerySuggested();
                 }
             }
         }
@@ -95,6 +114,7 @@ namespace WandEnhancer.View.MainWindow
         public RelayCommand ExportLogsCommand { get; }
         public RelayCommand ConfigureFirewallCommand { get; }
         public RelayCommand RunDiagnosticsCommand { get; }
+        public RelayCommand RunAutoDoctorCommand { get; }
 
         public void SetCustomInstallPath(string selectedPath)
         {
@@ -123,8 +143,28 @@ namespace WandEnhancer.View.MainWindow
             SetCustomInstallPath(selectedPath);
         }
 
+        /// <summary>
+        /// Runs <paramref name="runWork"/> directly if Wand isn't running. Otherwise asks for
+        /// explicit confirmation before force-closing it - Patch/Restore force-close Wand
+        /// themselves once invoked, but used to do so unconditionally with no way to decline.
+        /// </summary>
+        private void RunRequiringWandClosed(Func<Task> runWork)
+        {
+            if (WeModInfo == null || !ProcessTerminator.IsRunning(WeModInfo.BrandName))
+            {
+                _ = runWork();
+                return;
+            }
+
+            _shell.OpenPopup(new CloseWandConfirmPopup(WeModInfo.BrandName, () =>
+            {
+                _shell.ClosePopup();
+                _ = runWork();
+            }), LocalizationManager.Get("cwc_popup_title"));
+        }
+
         // Runs off the UI thread due to heavy file IO.
-        private async void OnBackupRestoring(object param)
+        private void OnBackupRestoring(object param)
         {
             if (WeModInfo == null)
             {
@@ -132,28 +172,31 @@ namespace WandEnhancer.View.MainWindow
                 return;
             }
 
-            IsBusy = true;
-            bool restored = await Task.Run(() =>
+            RunRequiringWandClosed(async () =>
             {
-                try
+                IsBusy = true;
+                bool restored = await Task.Run(() =>
                 {
-                    new Enhancer(WeModInfo, Log).Restore();
-                    return true;
-                }
-                catch (Exception e)
+                    try
+                    {
+                        new Enhancer(WeModInfo, Log).Restore();
+                        return true;
+                    }
+                    catch (Exception e)
+                    {
+                        Log(LocalizationManager.Format("log_restore_failed", e.Message), ELogType.Error);
+                        return false;
+                    }
+                });
+
+                IsBusy = false;
+                if (restored)
                 {
-                    Log(LocalizationManager.Format("log_restore_failed", e.Message), ELogType.Error);
-                    return false;
+                    AlreadyPatched = false;
+                    CanRestore = false;
+                    IsPatchEnabled = true;
                 }
             });
-
-            IsBusy = false;
-            if (restored)
-            {
-                AlreadyPatched = false;
-                CanRestore = false;
-                IsPatchEnabled = true;
-            }
         }
 
         private void OnPatching(object param)
@@ -164,26 +207,29 @@ namespace WandEnhancer.View.MainWindow
                 return;
             }
 
-            _shell.OpenPopup(new PatchVectorsPopup(async config =>
+            _shell.OpenPopup(new PatchVectorsPopup(config =>
             {
                 _shell.ClosePopup();
-                IsPatchEnabled = false;
-                IsBusy = true;
-                await Task.Run(() =>
+                RunRequiringWandClosed(async () =>
                 {
-                    try
+                    IsPatchEnabled = false;
+                    IsBusy = true;
+                    await Task.Run(() =>
                     {
-                        new Enhancer(WeModInfo, Log, config).Patch();
-                        AlreadyPatched = true;
-                        CanRestore = true;
-                    }
-                    catch (Exception e)
-                    {
-                        Log(LocalizationManager.Format("log_patch_failed", e.Message), ELogType.Error);
-                        IsPatchEnabled = true;
-                    }
+                        try
+                        {
+                            new Enhancer(WeModInfo, Log, config).Patch();
+                            AlreadyPatched = true;
+                            CanRestore = true;
+                        }
+                        catch (Exception e)
+                        {
+                            Log(LocalizationManager.Format("log_patch_failed", e.Message), ELogType.Error);
+                            IsPatchEnabled = true;
+                        }
+                    });
+                    IsBusy = false;
                 });
-                IsBusy = false;
             }), LocalizationManager.Get("pv_popup_title"));
         }
 
@@ -217,12 +263,53 @@ namespace WandEnhancer.View.MainWindow
 
         public void RunDiagnostics()
         {
-            Task.Run(() => DiagnosticsHelper.RunSystemDiagnostics(WeModInfo, Log));
+            if (IsBusy) return;
+            IsBusy = true;
+            Task.Run(() =>
+            {
+                try
+                {
+                    DiagnosticsHelper.RunSystemDiagnostics(WeModInfo, Log);
+                }
+                finally
+                {
+                    IsBusy = false;
+                }
+            });
+        }
+
+        public void RunAutoDoctor()
+        {
+            if (IsBusy) return;
+            IsBusy = true;
+            Task.Run(() =>
+            {
+                try
+                {
+                    AutoDoctorHelper.RunAutoDoctor(WeModInfo, Log);
+                }
+                finally
+                {
+                    IsBusy = false;
+                }
+            });
         }
 
         public void ConfigureFirewall()
         {
-            Task.Run(() => FirewallHelper.AddFirewallRule(FirewallHelper.DefaultPort, FirewallHelper.DefaultRuleName, Log));
+            if (IsBusy) return;
+            IsBusy = true;
+            Task.Run(() =>
+            {
+                try
+                {
+                    FirewallHelper.AddFirewallRule(FirewallHelper.DefaultPort, FirewallHelper.DefaultRuleName, Log);
+                }
+                finally
+                {
+                    IsBusy = false;
+                }
+            });
         }
 
         private void OnOpenSettings(object param)
@@ -244,7 +331,7 @@ namespace WandEnhancer.View.MainWindow
         {
             try
             {
-                System.Windows.Clipboard.SetText(BuildLogReport());
+                ClipboardRetry.SetText(BuildLogReport());
                 Log(LocalizationManager.Get("log_copied"), ELogType.Success);
             }
             catch (Exception e)
@@ -257,7 +344,7 @@ namespace WandEnhancer.View.MainWindow
         {
             string path = _dialogs.PickSaveFile(
                 LogExportFilter,
-                $"wand-enhancer-log-{DateTime.Now:yyyyMMdd-HHmmss}.txt");
+                $"sovereign-titan-log-{DateTime.Now:yyyyMMdd-HHmmss}.txt");
             if (path == null)
             {
                 return;
@@ -286,14 +373,15 @@ namespace WandEnhancer.View.MainWindow
         {
             _shell = shell;
             _dialogs = dialogs;
-            SetFolderPathCommand = new RelayCommand(OnFolderPathSelection);
-            ApplyPatchCommand = new RelayCommand(OnPatching);
-            RestoreBackupCommand = new RelayCommand(OnBackupRestoring);
-            OpenSettingsCommand = new RelayCommand(OnOpenSettings);
+            SetFolderPathCommand = new RelayCommand(OnFolderPathSelection, _ => IsIdle);
+            ApplyPatchCommand = new RelayCommand(OnPatching, _ => IsPatchEnabled && IsIdle);
+            RestoreBackupCommand = new RelayCommand(OnBackupRestoring, _ => CanRestore && IsIdle);
+            OpenSettingsCommand = new RelayCommand(OnOpenSettings, _ => IsIdle);
             CopyLogsCommand = new RelayCommand(OnCopyLogs, HasLogs);
             ExportLogsCommand = new RelayCommand(OnExportLogs, HasLogs);
-            ConfigureFirewallCommand = new RelayCommand(_ => ConfigureFirewall());
-            RunDiagnosticsCommand = new RelayCommand(_ => RunDiagnostics());
+            ConfigureFirewallCommand = new RelayCommand(_ => ConfigureFirewall(), _ => IsIdle);
+            RunDiagnosticsCommand = new RelayCommand(_ => RunDiagnostics(), _ => IsIdle);
+            RunAutoDoctorCommand = new RelayCommand(_ => RunAutoDoctor(), _ => IsIdle);
 
             UseInstall(WeModInstalls.FindWeMod());
             if (WeModInfo == null)

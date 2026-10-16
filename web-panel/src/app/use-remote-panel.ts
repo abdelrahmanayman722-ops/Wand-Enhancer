@@ -103,6 +103,8 @@ export function useRemotePanel() {
             values: session.state.values,
             pendingTargets: session.pendingTargets,
             connected: session.connected,
+            latencyMs: session.state.latencyMs,
+            telemetry: session.state.telemetry,
             connect: session.connect,
             disconnect: session.disconnect,
             setWsUrl: session.setWsUrl,
@@ -126,6 +128,8 @@ export function useRemotePanel() {
             addPreset: presets.addPreset,
             applyPreset,
             deletePreset: presets.deletePreset,
+            exportPresets: presets.exportPresets,
+            importPresets: presets.importPresets,
         },
         library: {
             games: libraryGames,

@@ -1,7 +1,7 @@
 import { useState } from 'react';
+import { triggerHaptic } from '@/shared/haptics';
 import { cn } from '@/shared/lib/ui';
 import { Icon } from '@/shared/ui/Icon';
-import { triggerHaptic } from '@/shared/haptics';
 
 import type { CheatSchema } from '../../../protocol/messages';
 import { formatInputNumber, stripNumberGrouping } from './format-number';

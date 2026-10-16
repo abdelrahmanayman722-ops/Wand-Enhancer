@@ -12,16 +12,37 @@
     <s:String x:Key="mw_patch">Применить</s:String>
     <s:String x:Key="mw_restore">Восстановить</s:String>
     <s:String x:Key="mw_source_code">Исходный код</s:String>
-    <s:String x:Key="mw_made_by">Сделано с ❤️ by k1tbyte</s:String>
+    <s:String x:Key="mw_made_by">Сделано с ❤️ Abdelrahman Ayman (@abdelrahmanayman722-ops)</s:String>
     <s:String x:Key="mw_star_hint">Поставьте звезду, если это было полезно ;)</s:String>
+    <s:String x:Key="mw_auto_doctor">Auto-Doctor и исправление среды</s:String>
     <s:String x:Key="mw_copy_logs">Скопировать логи в буфер обмена</s:String>
     <s:String x:Key="mw_export_logs">Экспортировать логи в файл</s:String>
+    <s:String x:Key="mw_update_badge">Доступна новая версия</s:String>
     <!--#endregion -->
 
     <!--#region Settings -->
     <s:String x:Key="settings_title">Настройки</s:String>
     <s:String x:Key="settings_language">Язык</s:String>
+    <s:String x:Key="settings_check_updates">Проверять обновления при запуске</s:String>
+    <s:String x:Key="settings_check_prereleases">Уведомлять о предварительных выпусках</s:String>
+    <s:String x:Key="settings_run_auto_doctor">Auto-Doctor и исправление среды (1 клик)</s:String>
+    <s:String x:Key="settings_configure_firewall">Настроить брандмауэр Windows (Порт 3223)</s:String>
+    <s:String x:Key="settings_run_diagnostics">Запустить диагностику системы</s:String>
     <s:String x:Key="settings_save">Сохранить</s:String>
+    <!--#endregion -->
+
+    <!--#region UpdatePopup -->
+    <s:String x:Key="up_popup_title">Доступно обновление</s:String>
+    <s:String x:Key="up_warning">SovereignTitan никогда не обновляется сам. Соберите новую версию в своем форке или откройте страницу релизов.</s:String>
+    <s:String x:Key="up_current_version">Текущая:</s:String>
+    <s:String x:Key="up_latest_version">Последняя:</s:String>
+    <s:String x:Key="up_release_notes">Примечания к выпуску</s:String>
+    <s:String x:Key="up_show_more">Показать полный список изменений</s:String>
+    <s:String x:Key="up_show_less">Показать примечания к выпуску</s:String>
+    <s:String x:Key="up_loading_changelog">Загрузка...</s:String>
+    <s:String x:Key="up_changelog_failed">Не удалось загрузить полный список изменений.</s:String>
+    <s:String x:Key="up_release_notes_unavailable">Примечания к выпуску не опубликованы.</s:String>
+    <s:String x:Key="up_open_release">Открыть страницу релиза</s:String>
     <!--#endregion -->
 
     <!--#region EnhanceVectorsPopup -->
@@ -40,6 +61,14 @@
     <s:String x:Key="pv_strategy_static">Static (рекомендуется)</s:String>
     <s:String x:Key="pv_strategy_supervised">Supervised</s:String>
     <s:String x:Key="pv_strategy_hint">Static правит файлы Wand на диске и ломает цифровую подпись. Supervised патчит в памяти при каждом запуске - может срабатывать антивирус и работает не у всех.</s:String>
+    <!--#endregion -->
+
+    <!--#region CloseWandConfirmPopup -->
+    <s:String x:Key="cwc_popup_title">Wand запущен</s:String>
+    <s:String x:Key="cwc_message">{0} необходимо закрыть перед продолжением.</s:String>
+    <s:String x:Key="cwc_hint">Любые несохраненные данные в Wand или в модифицированной игре будут потеряны. Сначала закройте игру, если она запущена.</s:String>
+    <s:String x:Key="cwc_confirm">Принудительно закрыть Wand</s:String>
+    <s:String x:Key="cwc_cancel">Отмена</s:String>
     <!--#endregion -->
 
     <!--#region Runtime log -->

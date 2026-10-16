@@ -2,189 +2,112 @@
 
 ![logo](./assets/icon.svg)
 
-# WandEnhancer
+# SovereignTitan (سوفيرين تيتان)
 
-[![GitLab Mirror](https://img.shields.io/badge/GitLab-mirror-fc6d26?logo=gitlab)](https://gitlab.com/kitbyte/wand-enhancer)
+### The Sovereign Cyberpunk Modding Engine & Remote Telemetry HUD for Wand / WeMod
+**Authored & Engineered by Abdelrahman Ayman ([@abdelrahmanayman722-ops](https://github.com/abdelrahmanayman722-ops))**
+
+[![License](https://img.shields.io/badge/License-Apache--2.0-00f0ff?style=flat-square)](LICENSE.md)
+[![Platform](https://img.shields.io/badge/Platform-Windows%20x64-0d1527?style=flat-square&logo=windows)](https://microsoft.com)
+[![Engine](https://img.shields.io/.NET-Framework%204.8%20%7C%20WPF-163252?style=flat-square)](https://dotnet.microsoft.com)
+[![Web Panel](https://img.shields.io/badge/Remote%20HUD-Preact%20%7C%20Tailwind-00f0ff?style=flat-square)](./web-panel)
 
 </div>
 
-<h4>An open-source interoperability tool designed to extend local client-side configurations and improve the UX of the Wand application.</h4>
+---
 
-**🚨 IMPORTANT NOTICE: THIS PROJECT HAS NO OFFICIAL YOUTUBE TUTORIALS, GUIDES, OR PREBUILT EXECUTABLE DOWNLOADS. 🚨
-There are no official videos showing how to install or use this tool. Scammers are creating fake tutorials using this project's name and placing malware/password stealers in the video descriptions. Official GitHub releases contain release notes only, not `.exe` files. If you downloaded an `.exe` or archive from a YouTube link, a random website, or a third-party mirror, you did not get it from this project. We are not responsible for third-party downloads.**
+## ⚡ What is SovereignTitan?
 
-## 👾 What does it access?
+**SovereignTitan** is an elite, client-side reverse-engineering and UX interoperability suite built for Wand and WeMod. It transforms the desktop client into a sovereign cyberpunk command center and integrates an ultra-low-latency mobile remote HUD, real-time diagnostic self-healing, and zero-fail compatibility with Wand releases **12.61, 12.62, and beyond**.
 
-The default .NET patcher modifies files in the selected local Wand installation and contains no update-checking or telemetry network code. Wand itself remains an online application, build tools restore declared dependencies, and the optional Remote Web Panel deliberately starts a LAN HTTP/WebSocket server and uses Wand API/CDN data. An explicit build-time option can include GitHub release notifications; that variant sends a GitHub API request with your IP and a User-Agent when Wand starts, but sends no Wand or account data and never downloads updates. Review the source and build the executable from your own fork; unsigned patching tools can trigger generic antivirus heuristics.
+> **🚨 CRITICAL SECURITY NOTICE: ZERO PREBUILT THIRD-PARTY EXECUTABLES**  
+> Official releases contain source code and cryptographic verifiable build definitions only. Scammers often post fake YouTube tutorials or third-party mirrors with trojans/stealers. Always build the executable directly using `build.cmd` or inspect the repository source.
 
-## 💫 What features are improved?
+---
 
-✅ Local environment configuration management <br/>
-✅ Automated compatibility adjustments for new client versions <br/>
-✅ Advanced layout and theme customization (Client-side only) <br/>
-✅ AI Features & Pro Subscription enablement <br/>
-✅ Drag & Drop installation folder and executable detection <br/>
-✅ Full Arabic & English bilingual support across Desktop and Web Panel <br/>
-✅ One-click Windows Firewall auto-configuration (Port 3223) <br/>
-✅ Pre-flight system environment diagnostics & log exporter <br/>
-✅ Remote web panel (Remote Connect on mobile with PWA and touch haptics) <br/>
-✅ Cheat presets import and export with strict JSON validation <br/>
-✅ Real-time round-trip latency tracking over WebSocket <br/>
+## 💫 Core Features & Architectural Capabilities
+
+### 1. 🛡️ Wand 12.61 / 12.62+ Zero-Fail ASAR Integrity Engine
+- **In-Place PE Hash Rewriting (`AsarIntegrityResourcePatch`):** Dynamically calculates the SHA-256 hash of the modified `app.asar` and updates `Wand.exe`'s internal `ElectronAsar\Integrity` PE resource on disk without breaking executable signatures.
+- **Auxiliary Integrity Neutralization (`AuxFuseIntegrityNeutralizer`):** Neutralizes the 3-fold runtime security fuses in `WandAuxiliaryService.exe` to allow seamless trainer library injection.
+- **Resilient Method Sentinel Discovery (`DotNetImage`):** Employs robust string sentinel searching for method alignment offsets, resilient to code obfuscation across updates.
+- **Fail-Safe I/O (`FileRetry` & `ClipboardRetry`):** Retries locked file operations with exponential backoff and protects against native Windows clipboard errors (`CLIPBRD_E_CANT_OPEN`).
+
+### 2. 🩺 Integrated Auto-Doctor & Self-Healing Fixer
+- **One-Click Diagnostic Suite:** Located directly on the desktop log console and Settings popup.
+- **Automated Process Lock Release:** Detects and cleanly terminates hung background `WeMod` / `Wand` process trees locking critical files.
+- **Permissions Restorer:** Automatically strips restrictive `ReadOnly` attributes from installation folders, ASAR binaries, and backup archives.
+- **Firewall Rule Provisioning:** Configures Windows Firewall inbound rules on port `3223` for seamless LAN remote control.
+- **Backup Verification:** Confirms the health of pristine `app.asar.backup` and `app.asar.unpacked.backup` before any patching occurs.
+
+### 3. 📊 Live Mobile Hardware & Telemetry HUD
+- **Real-Time Latency Ping:** Live round-trip write acknowledgment monitoring (sub-10ms loopback).
+- **CPU & RAM Monitor:** Streams live host CPU load percentage with dynamic color-coded gradient indicators and active memory utilization directly to the mobile drawer.
+- **Cyberpunk Obsidian & Neon Cyan Visual Aesthetic:** High-end dark glass interface styled with deep obsidian (`#070A13`), luminous neon cyan accents (`#00F0FF`), glowing borders, and smooth responsiveness.
+
+### 4. 🌐 Mobile Remote Web Panel & Offline PWA
+- **Progressive Web App (PWA):** Installable on Android & iOS home screens with offline Service Worker (`sw.js`).
+- **Tactile Touch Haptics (`navigator.vibrate`):** Multi-tier haptic vibration responses across toggles, step buttons, and quick actions.
+- **JSON Cheat Presets Engine:** Schema-validated export and import of game cheats with automatic ID deduplication.
+- **Ephemeral Pairing Tokens:** Cryptographically random session tokens (`?token=...`) embedded in QR codes to prevent unauthorized LAN connections.
+
+### 5. 🇸🇦 Native Bilingual Localization (العربية / English)
+- Full native Arabic (العربية) translation with bi-directional RTL layout switching across both the WPF desktop interface and the mobile remote panel.
+- 6-tier Arabic plural rules supported in Lingui catalogs.
+
+---
 
 ## 🏆 Upstream Impact & Community Continuation
 
-Architectural and UX contributions authored in [PR #328](https://github.com/k1tbyte/Wand-Enhancer/pull/328) have been officially adopted and integrated into the community continuation fork [**Glitxhhh/WandMagica** Release 2.2.0.0](https://github.com/Glitxhhh/WandMagica/releases/tag/2.2.0.0), powering core client and remote capabilities:
+Key architectural components originally authored in [PR #328](https://github.com/k1tbyte/Wand-Enhancer/pull/328) were adopted into the community fork [**Glitxhhh/WandMagica** v2.2.0.0](https://github.com/Glitxhhh/WandMagica/releases/tag/2.2.0.0), including:
+- Native Arabic localization dictionaries (`lang.ar-SA.xaml`)
+- Mobile touch haptics engine (`haptics.ts`)
+- PWA manifest and mobile viewport metadata
+- Ephemeral pairing token bridge security
+- Schema-validated JSON presets engine
 
-- 🌐 **Native Arabic (العربية) Localization:** Full WPF localization dictionary (`lang.ar-SA.xaml`) and Lingui PO translation catalog (`messages.po`) with automated bi-directional LTR/RTL layout switching.
-- 📱 **Progressive Web App (PWA) Engine:** Standalone web manifest (`manifest.webmanifest`), mobile viewport meta optimizations, and vector app icon (`favicon.svg`) for homescreen installation.
-- 🔒 **Cryptographic Pairing Tokens:** Ephemeral pairing token protocol (`?token=<ephemeral_token>`) securing the remote WebSocket bridge against unauthorized LAN access.
-- 📳 **Mobile Touch Haptics:** Zero-dependency tactile vibration feedback (`haptics.ts`) on cheat controls with safe browser fallback guards.
-- 💾 **Portable JSON Cheat Presets:** Schema-validated JSON export and import engine for quick cheat presets with ID deduplication across devices.
+---
 
-## 🌐 Remote Web Panel
-WandEnhancer includes a built-in **Remote Web Panel** allowing you to control app features directly from your phone.
+## 🛠️ Building SovereignTitan from Source
 
-### Quick Start:
-1. Ensure both your PC and phone are on the **same Wi-Fi network**.
-2. Hover over the **Connect** button in the top bar of WandEnhancer.
-3. Scan the displayed **QR code** with your phone's camera.
-4. (Optional) Tap **Add to Home Screen** on your mobile browser to install it as a standalone Progressive Web App (PWA) with tactile touch haptics.
+Building requires a local Windows development environment:
 
-### Troubleshooting & Remote Access:
-- **Page isn't loading?** First, ensure both your PC and phone are connected to the **same local network**. Some routers and guest Wi-Fi networks enable client isolation/AP isolation, which blocks devices on the same SSID from reaching each other. If it still does not load, open **Settings** in WandEnhancer and click **Configure Windows Firewall (Port 3223)** to automatically allow inbound traffic on TCP port `3223`. If Windows marked your connection as **Public**, switching it to **Private** can also help.
-- **System Diagnostics:** Open **Settings** and click **Run Diagnostics** to perform a pre-flight check of install paths, ASAR permissions, port availability, and network adapters, and export the report if needed.
-- **Using mobile data or a different network?** If you want to use the panel over mobile data (LTE/5G) or from an entirely different network, you can use [Tailscale](https://tailscale.com/) or similar VPN tools.
-- The panel protects connections with an ephemeral session token embedded automatically in the scanned QR code (`?token=...`), ensuring only devices that scanned the code on your display can control the active trainer.
-- The panel protocol does not include your Wand bearer token or installation-path fields.
+### Prerequisites:
+- Windows 10/11 x64
+- [.NET Framework 4.8 Developer Pack](https://dotnet.microsoft.com/download/dotnet-framework/net48)
+- [Node.js](https://nodejs.org/) (v18+) & [pnpm](https://pnpm.io/)
+- [Visual Studio 2022](https://visualstudio.microsoft.com/) with MSBuild (or Microsoft Build Tools)
 
-## 👀 How to use?
-
-This repository does not publish official compiled binaries. Build your own executable from your own fork using GitHub Actions.
-
-1. Sign in to GitHub and fork this repository.
-2. Use **Sync fork** before each build so your fork contains the latest fixes.
-3. Open your fork, go to the **Actions** tab, and enable workflows if GitHub asks you to.
-4. Select the **Build executable** workflow.
-5. Click **Run workflow** and start the run. Leave **Include GitHub release checks when Wand starts** off for a fully offline patcher, or enable it to compile in new-version notifications.
-6. Wait for the workflow to finish, open the completed run, and download the artifact.
-7. Extract the artifact zip and run `WandEnhancer.exe` to apply local client modifications.
-
-### Testing a release candidate
-
-- `master` is the stable source. Select a `feature/rc_*` branch in your fork's **Run workflow** branch selector only when the maintainer explicitly asks for candidate testing. Ensure that branch contains the upstream commit you intend to test; syncing `master` does not update a separate RC branch.
-- You do **not** need to open a pull request to this repository to build your fork.
-- Record the workflow's source commit SHA, not just `2.0.0.0`: the RC tag, RC branch and a local build may contain different fixes.
-- For startup failures, attach `launcher.log` and, if relevant, `launcher.prev.log` from the Wand installation root. They include the build commit and applied patches. Remove personal paths or other private information before sharing.
-- Include the exact Wand version and stable/beta channel, selected patches, and whether the failure happened on a fresh install, an update, or Restore. Do not attach executables, account tokens or storage dumps.
-
-*Here how you do it:*
-
-https://github.com/user-attachments/assets/7966cabe-0aa6-424d-8c2f-981ad91e0f91
-
-
-
-## 🧩 Custom scripts
-
-You can inject your own JavaScript into Wand at patch time to tweak or fix things in the client UI. This reuses the same renderer injection the Remote Web Panel uses, so it requires the **Remote Web Panel** patch to be enabled.
-
-**How to add a script**
-
-- In the patch dialog, add one or more `.js` files (only existing `.js` files are accepted), **or**
-- Drop `.js` files into a `renderer-scripts/` folder placed next to the patcher executable.
-
-Then patch as usual — your scripts are bundled into the client and run inside Wand's window.
-
-**How it runs**
-
-- Each script runs inside Wand's renderer (full DOM access, plus Node `require`).
-- It is wrapped so a thrown error is logged and never crashes Wand.
-- It may run **more than once** per launch (on load and again shortly after), so guard one‑time work behind a global flag.
-- A small `WandEnhancer` helper is available: `WandEnhancer.log(...)`, `WandEnhancer.remoteUrl`, `WandEnhancer.apiVersion`.
-
-**Minimal example** (`hello.js`)
-
-```js
-// Injected scripts can run multiple times — guard one-time setup.
-if (!globalThis.__helloScriptInstalled) {
-  globalThis.__helloScriptInstalled = true;
-
-  WandEnhancer.log("Hello from my custom script!", WandEnhancer.remoteUrl);
-
-  new MutationObserver(() => {
-    const dialog = document.querySelector("ux-dialog:not([data-seen])");
-    if (dialog) {
-      dialog.setAttribute("data-seen", "1");
-      WandEnhancer.log("A dialog opened.");
-    }
-  }).observe(document.documentElement, { childList: true, subtree: true });
-}
+### Build Command:
+```cmd
+build.cmd
 ```
-
-> Scripts run with the same privileges as the Wand client. Only add scripts you trust and understand.
-
-## 🛠️ How to build from source
-
-Building from source on Windows requires a local development environment.
-
-### Requirements
-
-- `Node.js` and `pnpm`
-- `Visual Studio 2022` or `Build Tools for Visual Studio 2022` with `MSBuild`
-- .NET Framework 4.8 desktop build tools / targeting pack
-
-### Build steps
-
-1. Clone this repository.
-2. Install the requirements above and make sure `pnpm` and `MSBuild` are available.
-3. Run `build.cmd` from Command Prompt or PowerShell.
-
-The build script installs dependencies, lints and type-checks the panel, builds production assets, runs web tests, builds WPF, and checks desktop patch state and structural JavaScript patches. Tests use temporary fixtures, not your Wand installation.
-
-Update notifications are excluded by default. To compile them in locally, run `build.cmd -EnableUpdateNotifications`. When compiled in, the check runs on Wand's launch (on by default, toggle in Settings), shows a native Windows notification for a newer release, and opens the release notes when clicked (the release page when only the launcher is running). It never downloads or installs an update.
+The build pipeline executes:
+1. Web panel typecheck, Vite asset compilation, and bridge bundling (`build:bridge`).
+2. Vitest test suite verification across 17 test suites (61 unit & integration tests).
+3. MSBuild compilation in `Release` configuration.
+4. `ILRepack` single-file assembly merging, packing all DLLs into a standalone `SovereignTitan.exe`.
+5. Desktop regression test (`scripts/test-desktop.ps1`) and structural JavaScript patch locator verification (`scripts/test-patch-locators.ps1`).
 
 ---
 
-## ❓ Q&A
+## 📱 Using the Mobile Remote Web Panel
 
-- **Why is there no `.exe` in GitHub Releases?**
-  - Official releases are notes-only on purpose. The project no longer distributes prebuilt executables because unsigned or self-built patching tools are repeatedly reuploaded, mislabeled, and flagged by third-party scanners. Build the executable from your own fork using GitHub Actions instead.
-- **Where do I download the executable?**
-  - From your own fork's **Actions** artifact after running the **Build executable** workflow. Do not download `.exe` files from YouTube descriptions, random mirrors, Discord attachments, or issue comments.
-- **Why does Windows Defender or SmartScreen warn about my build?**
-  - The GitHub Actions artifact is unsigned and uncommon, so Windows may warn even when the code was built directly from your fork. Review the source, verify the workflow logs, and only run binaries you built yourself.
-- **Can I use a binary built by someone else?**
-  - You can, but you should treat it as untrusted. This repository cannot verify or support third-party builds.
-- **Does this send data anywhere?**
-  - The default .NET patcher is fully offline. The optional Remote Web Panel listens on your LAN and may request trainer translations/artwork through Wand's existing API/CDN paths. If you explicitly compile in update notifications, each Wand launch checks GitHub's public releases API and exposes only the normal request metadata, including your IP and User-Agent. There is no telemetry, download, or automatic update.
-- **How do I learn about a new version without an in-app update check?**
-  - On GitHub choose **Watch → Custom → Releases**, then sync your fork and run **Build executable** when a release is published. You can also opt into compile-time release notifications in the manual workflow.
-
----
-## 🖼️ Screenshots
-![1](./assets/screenshots/app1.png)
-<div align='center'>
-
-![2](./assets/screenshots/app2.png)
-</div>
-
-
-## 📜 License
-This project is licensed under the Apache-2.0 - see the [LICENSE](LICENSE.md) file for details.
-
-
-## ❤️ Support
-
-If you find this project useful, you can support its development using any of the options below 🙌
-
-[![Patreon](https://img.shields.io/badge/Patreon-donate-f96854.svg?logo=patreon)](https://www.patreon.com/kitbyte/gift)
-[![USDT TRC20](https://img.shields.io/badge/USDT--TRC20-donate-26a17b.svg?logo=tether)](https://tronscan.org/#/address/TQdvau8pAy5Tg1Aa588tTcPCFgbcHtuoxc)
-[![BTC](https://img.shields.io/badge/BTC-donate-f7931a.svg?logo=bitcoin)](https://www.blockchain.com/explorer/addresses/btc/1EZKDcyU8REm9JW5xwXJqSpn5Xaq5yAWWX)
-[![ETH](https://img.shields.io/badge/ETH-donate-3c3c3d.svg?logo=ethereum)](https://etherscan.io/address/0xd904d9d0557f88bbb1c4ab3582b4ca0d8a730e8d)
-
+1. Connect your PC and phone to the same local Wi-Fi network.
+2. In **SovereignTitan**, hover over the **Connect** button in the header.
+3. Scan the generated QR code with your phone camera.
+4. Tap **Add to Home Screen** to install the full-screen PWA with tactile haptics.
+5. If the connection is blocked, click **Auto-Doctor** or open **Settings → Configure Windows Firewall (Port 3223)**.
 
 ---
 
-> **Legal Disclaimer:**
-> This project is a third-party enhancement tool intended solely for educational, research, and local interoperability purposes. It does not distribute any proprietary code or bypass server-side validations. All modifications are performed locally to customize the user's interface.
+## 📜 License & Credits
+
+- Licensed under the [Apache-2.0 License](LICENSE.md).
+- Original open-source upstream enhancements by `k1tbyte`.
+- Modernized flagship architecture, Auto-Doctor, Telemetry HUD, and Wand 12.61+ fuses by **Abdelrahman Ayman ([@abdelrahmanayman722-ops](https://github.com/abdelrahmanayman722-ops))**.
 
 ---
+
+> **Legal Disclaimer:**  
+> This software is an independent interoperability tool designed solely for local UI customization, research, and accessibility. It does not distribute proprietary binaries, modify remote servers, or bypass server-side account authentication.
