@@ -31,6 +31,16 @@ The default .NET patcher modifies files in the selected local Wand installation 
 ✅ Cheat presets import and export with strict JSON validation <br/>
 ✅ Real-time round-trip latency tracking over WebSocket <br/>
 
+## 🏆 Upstream Impact & Community Continuation
+
+Architectural and UX contributions authored in [PR #328](https://github.com/k1tbyte/Wand-Enhancer/pull/328) have been officially adopted and integrated into the community continuation fork [**Glitxhhh/WandMagica** Release 2.2.0.0](https://github.com/Glitxhhh/WandMagica/releases/tag/2.2.0.0), powering core client and remote capabilities:
+
+- 🌐 **Native Arabic (العربية) Localization:** Full WPF localization dictionary (`lang.ar-SA.xaml`) and Lingui PO translation catalog (`messages.po`) with automated bi-directional LTR/RTL layout switching.
+- 📱 **Progressive Web App (PWA) Engine:** Standalone web manifest (`manifest.webmanifest`), mobile viewport meta optimizations, and vector app icon (`favicon.svg`) for homescreen installation.
+- 🔒 **Cryptographic Pairing Tokens:** Ephemeral pairing token protocol (`?token=<ephemeral_token>`) securing the remote WebSocket bridge against unauthorized LAN access.
+- 📳 **Mobile Touch Haptics:** Zero-dependency tactile vibration feedback (`haptics.ts`) on cheat controls with safe browser fallback guards.
+- 💾 **Portable JSON Cheat Presets:** Schema-validated JSON export and import engine for quick cheat presets with ID deduplication across devices.
+
 ## 🌐 Remote Web Panel
 WandEnhancer includes a built-in **Remote Web Panel** allowing you to control app features directly from your phone.
 
