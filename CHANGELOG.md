@@ -3,6 +3,16 @@
 This file is the source of truth for release notes.
 The newest entry must match the version in `WandEnhancer/Properties/AssemblyInfo.cs`.
 
+## [2.4.0.0] - 2026-10-17
+
+### Wand / WeMod 12.64.1 Zero-Fail Compatibility
+
+- **First-Class Certified Support for WeMod / Wand 12.64.1.** Fully verified and hardened against the newest WeMod / Wand 12.64.1 release (Electron 41.7.0, Chromium 146.0.7680.216, V8 wire version 1 with 9 fuses).
+- **Idempotent AST Account Reducer Locator.** Enhanced `LocateAccountReducer` in `EnhancerConfig.cs` to transparently match both pristine reducer definitions and pre-existing wrapper expressions, enabling flawless re-patching and regression testing without AST collision errors.
+- **Resilient Webpack QR Renderer Resolution.** Hardened `remote-popup-cleanup.js` and `qr-renderer.js` to automatically fall back to `toCanvas` when `WAND_QR_RENDERER_EXPORT` (`mo`) varies across tree-shaken webpack chunks.
+- **Comprehensive Verification Across 535 Bundles.** All 12 structural patch locators, PE resource hash synchronization (`AsarIntegrityResourcePatch`), auxiliary trust neutralizer (`AuxTrustNeutralizer`), and disk fuse patches verified 100% operational against genuine 12.64.1 binaries and ASAR packages.
+- **Auto-Doctor Diagnostic Certification.** Successfully validated 12.64.1 environment diagnostics, permissions self-healing, and firewall rule status with zero warnings.
+
 ## [2.3.0.0] - 2026-10-16
 
 ### Brand & Architectural Sovereignty

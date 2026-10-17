@@ -46,6 +46,15 @@ describe('installed-apps renderer script models', () => {
         };
 
         expect(resolveQrRenderer(webpackRequire)).toBe(renderer);
+
+        const canvasRenderer = () => undefined;
+        const fallbackWebpackRequire = {
+            c: {
+                qrCode: { exports: { toCanvas: canvasRenderer } },
+            },
+        };
+
+        expect(resolveQrRenderer(fallbackWebpackRequire)).toBe(canvasRenderer);
     });
 
     it('resolves the trainer launch request in stable and beta export shapes', () => {

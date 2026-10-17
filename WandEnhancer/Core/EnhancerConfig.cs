@@ -160,9 +160,10 @@ namespace WandEnhancer.Core
                 return null;
             }
 
+            // Supports both pristine and idempotent re-patching patterns.
             // ${account} is a regex back-reference, not a PatchPayload placeholder.
             return Edits(reducer.ReplaceInBody(
-                @"account:\s*(?<account>[\w$]+)",
+                @"account:\s*(?:\(\s*\(?\s*[\w$]+\s*\)?\s*=>.+?\)\s*\(\s*(?<account>[\w$]+)\s*\)|(?<account>[\w$]+))",
                 PatchPayload.Load("pro-account-reducer")));
         }
 
