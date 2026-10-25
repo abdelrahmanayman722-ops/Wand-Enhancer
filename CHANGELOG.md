@@ -3,6 +3,27 @@
 This file is the source of truth for release notes.
 The newest entry must match the version in `WandEnhancer/Properties/AssemblyInfo.cs`.
 
+## [2.5.0.0] - 2026-10-25
+
+### Zero-Day Wand / WeMod 12.66.0 Certification & Architecture
+
+- **Certified Support for WeMod / Wand 12.66.0.** Zero-fail certified compatibility with Wand 12.66.0. Verified all 12 structural AST patch locators across all 515 genuine bundles with 100% test pass rate and syntax verification (`node --check`).
+- **PE Resource Integrity & Fuse Synchronization.** Verified SHA256 header hash rewriting for `ElectronAsar\Integrity` in `Wand.exe`, auxiliary trust neutralization in `WandAuxiliaryService.exe`, and Electron fuse toggles.
+- **Flawless Lifecycle Transitions.** Validated full live lifecycle on `app-12.66.0`: Patch -> AutoDoctor -> Restore -> Re-patch with zero regressions and pristine backup preservation.
+
+### Advanced Process-Lock Diagnostics & Termination Engine (PR #359)
+
+- **Intelligent Process Tree & Helper Termination.** Added `TryKillProcessesUnder(string directoryPrefix)` in `ProcessTerminator.cs` to terminate background helper processes residing under the Squirrel root (e.g. `Update.exe`, crashpad handler, watcher stubs) before patch or restore.
+- **Exponential Backoff File Recovery.** Added `RetryWhileLocked` in `Enhancer.cs` with exponential backoff on `IOException` and `UnauthorizedAccessException` to gracefully allow OS handle table tear-downs and transient locks to settle.
+- **Deep Module Lock Diagnostics.** Introduced `FindProcessesUsing(string path)` to inspect active process module tables, accurately detecting and explicitly naming external games or applications locking `overlay_game_x64.dll` or unpacked assets across both individual file paths and directory trees.
+- **Robust MSBuild Packaging Quoting.** Hardened `DllList` assembly packaging in `WandEnhancer.csproj` with quoted identifiers (`&quot;%(Identity)&quot;`), defending against spaces and `&` in paths while eliminating non-ASCII ANSI encoding corruption.
+
+### Web Panel Toolchain Modernization & Community Locales
+
+- **Modernized Toolchain.** Bumped Vite to `^7.3.7` in `web-panel/package.json` ensuring optimized build and packaging performance.
+- **Bengali (Bangladesh) Community Locale.** Added synchronized Bengali localization dictionary (`lang.bn-BD.xaml`) and registered `bn-BD` culture in `LocalizationManager.cs` and `WandEnhancer.csproj`.
+- **Zero-Warning Dist Sanitation.** Enforced strict Biome linting (0 errors), Vitest test suite pass, and verified zero forbidden mock/debug tokens in production dist assets.
+
 ## [2.4.0.0] - 2026-10-17
 
 ### Wand / WeMod 12.64.1 Zero-Fail Compatibility

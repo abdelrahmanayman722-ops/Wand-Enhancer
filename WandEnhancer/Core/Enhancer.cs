@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using AsarSharp;
 using WandEnhancer.Core.Patching.Content;
 using WandEnhancer.Core.Patching.Shared;
@@ -21,6 +22,8 @@ namespace WandEnhancer.Core
         private const string AppAsarUnpackedBackupDirectoryName = "app.asar.unpacked.backup";
         private const string IncompletePatchMarkerFileName = ".incomplete-patch";
         private const string ProxyDllFileName = "version.dll";
+        private const int LockedFileRetryCount = 4;
+        private const int LockedFileInitialRetryDelayMs = 200;
 
         private readonly WeModConfig _weModConfig;
         private readonly Action<string, ELogType> _logger;
@@ -101,9 +104,67 @@ namespace WandEnhancer.Core
             }
         }
 
-        public void Patch()
+        /// <summary>
+        /// Stops everything that can hold install files open: the client, its auxiliary
+        /// service, and helpers under the install root (Update.exe, crashpad, watcher).
+        /// </summary>
+        private void KillInstallProcesses()
         {
             ProcessTerminator.TryKillProcess(_weModConfig.BrandName);
+            ProcessTerminator.TryKillProcess($"{_weModConfig.BrandName}AuxiliaryService");
+            ProcessTerminator.TryKillProcessesUnder(SquirrelRoot);
+        }
+
+        /// <summary>
+        /// Retries file operations with brief exponential backoff so locks released
+        /// by just-killed processes or terminating games can settle.
+        /// </summary>
+        private static void RetryWhileLocked(Action action)
+        {
+            int delayMs = LockedFileInitialRetryDelayMs;
+            for (int attempt = 0; ; attempt++)
+            {
+                try
+                {
+                    action();
+                    return;
+                }
+                catch (Exception e) when ((e is IOException || e is UnauthorizedAccessException) &&
+                                          attempt + 1 < LockedFileRetryCount)
+                {
+                    Thread.Sleep(delayMs);
+                    delayMs *= 2;
+                }
+            }
+        }
+
+        /// <summary>Replaces app.asar.unpacked with the pristine backup, retrying transient locks.</summary>
+        private void ReplaceUnpackedDirectory()
+        {
+            RetryWhileLocked(() =>
+            {
+                if (Directory.Exists(_unpackedPath))
+                {
+                    Directory.Delete(_unpackedPath, true);
+                }
+
+                AsarSharp.Utils.Extensions.CopyDirectory(_unpackedBackupPath, _unpackedPath);
+            });
+        }
+
+        /// <summary>Explains a persistent file lock by naming whoever still has the files open.</summary>
+        private Exception LockedFilesException(Exception inner)
+        {
+            var lockers = ProcessTerminator.FindProcessesUsing(_unpackedPath);
+            string message = lockers.Count > 0
+                ? $"{inner.Message} Still in use by {string.Join(", ", lockers)} - close it and try again."
+                : $"{inner.Message} Another process still has these files open; close it and try again.";
+            return new Exception($"[ENHANCER] {message}", inner);
+        }
+
+        public void Patch()
+        {
+            KillInstallProcesses();
             string markerPath = Path.Combine(Path.GetDirectoryName(_asarPath), IncompletePatchMarkerFileName);
             File.WriteAllText(markerPath, string.Empty);
 
@@ -115,7 +176,7 @@ namespace WandEnhancer.Core
             else
             {
                 _logger("[ENHANCER] Backup found, restoring pristine app.asar before patching...", ELogType.Info);
-                FileRetry.Run(() => AsarSharp.Utils.Extensions.CopyOver(_backupPath, _asarPath));
+                RetryWhileLocked(() => AsarSharp.Utils.Extensions.CopyOver(_backupPath, _asarPath));
             }
 
             if (!Directory.Exists(_unpackedBackupPath) && Directory.Exists(_unpackedPath))
@@ -126,15 +187,14 @@ namespace WandEnhancer.Core
             else if (Directory.Exists(_unpackedBackupPath))
             {
                 _logger("[ENHANCER] Restoring pristine app.asar.unpacked before patching...", ELogType.Info);
-                FileRetry.Run(() =>
+                try
                 {
-                    if (Directory.Exists(_unpackedPath))
-                    {
-                        Directory.Delete(_unpackedPath, true);
-                    }
-
-                    AsarSharp.Utils.Extensions.CopyDirectory(_unpackedBackupPath, _unpackedPath);
-                });
+                    ReplaceUnpackedDirectory();
+                }
+                catch (Exception e) when (e is IOException || e is UnauthorizedAccessException)
+                {
+                    throw LockedFilesException(e);
+                }
             }
             else if (!Directory.Exists(_unpackedPath))
             {
@@ -292,17 +352,12 @@ namespace WandEnhancer.Core
             {
                 if (File.Exists(_backupPath))
                 {
-                    AsarSharp.Utils.Extensions.CopyOver(_backupPath, _asarPath);
+                    RetryWhileLocked(() => AsarSharp.Utils.Extensions.CopyOver(_backupPath, _asarPath));
                 }
 
                 if (Directory.Exists(_unpackedBackupPath))
                 {
-                    if (Directory.Exists(_unpackedPath))
-                    {
-                        Directory.Delete(_unpackedPath, true);
-                    }
-
-                    AsarSharp.Utils.Extensions.CopyDirectory(_unpackedBackupPath, _unpackedPath);
+                    ReplaceUnpackedDirectory();
                 }
 
                 // Undo on-disk fuse and launcher deployment to prevent a tampered unlaunchable Wand.
@@ -335,20 +390,19 @@ namespace WandEnhancer.Core
                 throw new Exception("[ENHANCER] Backup is incomplete. Restore the original Wand installation files or reinstall Wand.");
             }
 
-            ProcessTerminator.TryKillProcess(_weModConfig.BrandName);
-            FileRetry.Run(() =>
-            {
-                AsarSharp.Utils.Extensions.CopyOver(_backupPath, _asarPath);
-
-                if (Directory.Exists(_unpackedPath))
-                {
-                    Directory.Delete(_unpackedPath, true);
-                }
-
-                AsarSharp.Utils.Extensions.CopyDirectory(_unpackedBackupPath, _unpackedPath);
-            });
-
+            // The watcher runs from the install root; stop it before it can re-patch mid-restore.
             Services.WatcherAutostart.Stop(_weModConfig);
+            KillInstallProcesses();
+
+            try
+            {
+                RetryWhileLocked(() => AsarSharp.Utils.Extensions.CopyOver(_backupPath, _asarPath));
+                ReplaceUnpackedDirectory();
+            }
+            catch (Exception e) when (e is IOException || e is UnauthorizedAccessException)
+            {
+                throw LockedFilesException(e);
+            }
 
             // Clean up legacy proxy DLL
             var proxyDllPath = Path.Combine(_weModConfig.RootDirectory, ProxyDllFileName);

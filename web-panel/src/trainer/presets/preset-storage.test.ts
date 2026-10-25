@@ -16,6 +16,7 @@ const cheats: CheatSchema[] = [
         uuid: 'u1',
         category: 'Player',
         description: null,
+        args: {},
     },
     {
         type: ECheatType.Button,
@@ -24,6 +25,7 @@ const cheats: CheatSchema[] = [
         uuid: 'u2',
         category: 'Player',
         description: null,
+        args: {},
     },
 ];
 
