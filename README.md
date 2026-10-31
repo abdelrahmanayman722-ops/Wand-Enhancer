@@ -9,7 +9,7 @@
 
 [![License](https://img.shields.io/badge/License-Apache--2.0-00f0ff?style=flat-square)](LICENSE.md)
 [![Platform](https://img.shields.io/badge/Platform-Windows%20x64-0d1527?style=flat-square&logo=windows)](https://microsoft.com)
-[![Engine](https://img.shields.io/.NET-Framework%204.8%20%7C%20WPF-163252?style=flat-square)](https://dotnet.microsoft.com)
+[![Engine](https://img.shields.io/badge/.NET-Framework%204.8%20%7C%20WPF-163252?style=flat-square)](https://dotnet.microsoft.com)
 [![Web Panel](https://img.shields.io/badge/Remote%20HUD-Preact%20%7C%20Tailwind-00f0ff?style=flat-square)](./web-panel)
 
 </div>
