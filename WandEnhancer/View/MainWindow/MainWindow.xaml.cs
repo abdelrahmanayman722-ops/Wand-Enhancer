@@ -2,6 +2,7 @@ using System;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using WandEnhancer.Core;
 
 namespace WandEnhancer.View.MainWindow
 {
@@ -24,6 +25,9 @@ namespace WandEnhancer.View.MainWindow
             this.DataContext = ViewModel;
             VersionLabel.Text = Constants.Version.ToString();
             Instance = this;
+
+            LauncherLog.Write("SECURITY ADVISORY: Only run official binaries verified with SHA256 from Eng. Abdelrahman Rashad (@abdelrahmanayman722-ops). Beware of malicious typosquats (@ki11tbyte, ki1bytee, smokeysfc) distributing password-stealing malware.", ELogType.Info);
+            ViewModel.AppendLog("SECURITY: Verify official SHA256 hashes published by @abdelrahmanayman722-ops.", ELogType.Info);
         }
 
         public void OpenPopup(FrameworkElement content, string title = null)

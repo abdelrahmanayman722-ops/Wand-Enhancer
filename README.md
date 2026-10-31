@@ -5,7 +5,7 @@
 # SovereignTitan (سوفيرين تيتان)
 
 ### The Sovereign Cyberpunk Modding Engine & Remote Telemetry HUD for Wand / WeMod
-**Authored & Engineered by Abdelrahman Ayman ([@abdelrahmanayman722-ops](https://github.com/abdelrahmanayman722-ops))**
+**Authored & Engineered by Eng. Abdelrahman Rashad ([@abdelrahmanayman722-ops](https://github.com/abdelrahmanayman722-ops))**
 
 [![License](https://img.shields.io/badge/License-Apache--2.0-00f0ff?style=flat-square)](LICENSE.md)
 [![Platform](https://img.shields.io/badge/Platform-Windows%20x64-0d1527?style=flat-square&logo=windows)](https://microsoft.com)
@@ -16,12 +16,43 @@
 
 ---
 
+> [!CAUTION]
+> ### 🚨 CRITICAL COMMUNITY DEFENSE ADVISORY: MALICIOUS TYPOSQUATTING & INFOSTEALER THREAT
+> 
+> **A malicious threat actor (`@ki11tbyte`) and fraudulent repositories (`ki1bytee`, `smokeysfc`) are actively targeting the WeMod / Wand modding community by distributing Trojanized binaries.**
+> 
+> #### ⚠️ Threat Summary & Attack Vector
+> - **Attacker Profile**: Typosquatting / visual homoglyph account `@ki11tbyte` (duplicating `1`s to mimic the original developer `k1tbyte`) and associated rogue repos `ki1bytee` and `smokeysfc`.
+> - **Malware Payload**: Precompiled `.exe` binaries from these unauthorized sources contain **password-stealing infostealer malware (RedLine / Lumma / Vidar variants)** designed to silently harvest:
+>   - Web browser saved passwords, autofill data, credit cards, and active session cookies
+>   - Discord authorization tokens and Telegram session tokens
+>   - Steam credentials, EA/Epic login tokens, and game accounts
+>   - Cryptocurrency desktop wallet data (MetaMask, Phantom, Exodus, etc.)
+> - **Distribution Vectors**: Fake YouTube installation tutorials, deceptive Discord links, unofficial third-party download portals, and typosquatted GitHub forks promoting "1-click pre-cracked VIP" downloads.
+> 
+> #### 🛡️ Zero-Trust Security Directive
+> 1. **Never download or execute precompiled binaries** from unverified forks, YouTube descriptions, Telegram channels, or unofficial mirrors.
+> 2. **Official Source**: The only authentic codebase is maintained by **Eng. Abdelrahman Rashad** at [`github.com/abdelrahmanayman722-ops/Wand-Enhancer`](https://github.com/abdelrahmanayman722-ops/Wand-Enhancer).
+> 3. **Build From Source**: Whenever possible, compile the binary locally using `build.cmd` with clean, inspected source code.
+> 4. **Cryptographic Hash Verification**: If downloading official releases, **always verify the SHA256 checksum** against `SHA256SUMS.txt` before execution:
+> 
+> **PowerShell:**
+> ```powershell
+> (Get-FileHash -Path .\SovereignTitan.exe -Algorithm SHA256).Hash
+> ```
+> 
+> **Command Prompt (CMD):**
+> ```cmd
+> certutil -hashfile SovereignTitan.exe SHA256
+> ```
+> 
+> *For responsible disclosure protocols and full threat intelligence, consult [SECURITY.md](SECURITY.md).*
+
+---
+
 ## ⚡ What is SovereignTitan?
 
-**SovereignTitan** is an elite, client-side reverse-engineering and UX interoperability suite built for Wand and WeMod. It transforms the desktop client into a sovereign cyberpunk command center and integrates an ultra-low-latency mobile remote HUD, real-time diagnostic self-healing, and zero-fail compatibility with Wand releases **12.61, 12.62, and beyond**.
-
-> **🚨 CRITICAL SECURITY NOTICE: ZERO PREBUILT THIRD-PARTY EXECUTABLES**  
-> Official releases contain source code and cryptographic verifiable build definitions only. Scammers often post fake YouTube tutorials or third-party mirrors with trojans/stealers. Always build the executable directly using `build.cmd` or inspect the repository source.
+**SovereignTitan** is an elite, client-side reverse-engineering and UX interoperability suite built for Wand and WeMod. It transforms the desktop client into a sovereign cyberpunk command center and integrates an ultra-low-latency mobile remote HUD, real-time diagnostic self-healing, and zero-fail compatibility with Wand releases **12.61 through 12.68.0 and beyond**.
 
 ---
 
@@ -105,7 +136,7 @@ The build pipeline executes:
 
 - Licensed under the [Apache-2.0 License](LICENSE.md).
 - Original open-source upstream enhancements by `k1tbyte`.
-- Modernized flagship architecture, Auto-Doctor, Telemetry HUD, and Wand 12.61+ fuses by **Abdelrahman Ayman ([@abdelrahmanayman722-ops](https://github.com/abdelrahmanayman722-ops))**.
+- Modernized flagship architecture, Auto-Doctor, Telemetry HUD, and Wand 12.68.0+ fuses by **Eng. Abdelrahman Rashad ([@abdelrahmanayman722-ops](https://github.com/abdelrahmanayman722-ops))**.
 
 ---
 

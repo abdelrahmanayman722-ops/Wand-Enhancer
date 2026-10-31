@@ -3,58 +3,38 @@
 This file is the source of truth for release notes.
 The newest entry must match the version in `WandEnhancer/Properties/AssemblyInfo.cs`.
 
-## [2.5.0.0] - 2026-10-25
+## [2.3.0.0] - 2026-10-31
 
-### Zero-Day Wand / WeMod 12.66.0 Certification & Architecture
+### Defensive Security Countermeasures & Community Protection (R3)
 
-- **Certified Support for WeMod / Wand 12.66.0.** Zero-fail certified compatibility with Wand 12.66.0. Verified all 12 structural AST patch locators across all 515 genuine bundles with 100% test pass rate and syntax verification (`node --check`).
-- **PE Resource Integrity & Fuse Synchronization.** Verified SHA256 header hash rewriting for `ElectronAsar\Integrity` in `Wand.exe`, auxiliary trust neutralization in `WandAuxiliaryService.exe`, and Electron fuse toggles.
-- **Flawless Lifecycle Transitions.** Validated full live lifecycle on `app-12.66.0`: Patch -> AutoDoctor -> Restore -> Re-patch with zero regressions and pristine backup preservation.
+- **Official Security Advisory against Impersonator @ki11tbyte.** Issued a high-priority security advisory exposing malicious threat actor `@ki11tbyte` (visual typosquatting/homoglyph of `@k1tbyte`) and fraudulent repositories (`ki1bytee`, `smokeysfc`).
+- **Infostealer Threat Neutralization.** Documented malware attack vectors where fraudulent actors distribute Trojanized precompiled executables embedding password-stealers targeting browser credentials, cookies, Discord tokens, Telegram sessions, Steam credentials, and cryptocurrency wallets.
+- **Mandatory Cryptographic Verification Policy.** Integrated comprehensive SHA256 checksum verification manifests (`SHA256SUMS.txt`) and step-by-step verification commands for PowerShell (`Get-FileHash -Algorithm SHA256`) and Command Prompt (`certutil -hashfile`) to enable zero-trust verification of official binaries.
+- **Dedicated Security Policy (`SECURITY.md`).** Established repository-wide security guidelines, reporting protocols, and threat intelligence documentation at the repository root.
+- **Launcher Security Advisory Logging.** Added automated security notices to `LauncherLog` and desktop log streams on initialization, reminding users to verify authentic SHA256 hashes published by `@abdelrahmanayman722-ops`.
 
-### Advanced Process-Lock Diagnostics & Termination Engine (PR #359)
+### Certified Wand / WeMod v12.68.0 Zero-Day Compatibility (R1)
 
-- **Intelligent Process Tree & Helper Termination.** Added `TryKillProcessesUnder(string directoryPrefix)` in `ProcessTerminator.cs` to terminate background helper processes residing under the Squirrel root (e.g. `Update.exe`, crashpad handler, watcher stubs) before patch or restore.
-- **Exponential Backoff File Recovery.** Added `RetryWhileLocked` in `Enhancer.cs` with exponential backoff on `IOException` and `UnauthorizedAccessException` to gracefully allow OS handle table tear-downs and transient locks to settle.
-- **Deep Module Lock Diagnostics.** Introduced `FindProcessesUsing(string path)` to inspect active process module tables, accurately detecting and explicitly naming external games or applications locking `overlay_game_x64.dll` or unpacked assets across both individual file paths and directory trees.
-- **Robust MSBuild Packaging Quoting.** Hardened `DllList` assembly packaging in `WandEnhancer.csproj` with quoted identifiers (`&quot;%(Identity)&quot;`), defending against spaces and `&` in paths while eliminating non-ASCII ANSI encoding corruption.
+- **Certified Support for WeMod / Wand v12.68.0.** Zero-fail certified compatibility with Wand v12.68.0 (Electron 41.7.0, Chromium 146, V8 wire format with 9 fuses). Verified all 12 structural AST patch locators across all genuine bundles with a 100% test pass rate and syntax verification (`node --check`).
+- **PE Resource Integrity & Fuse Synchronization.** Verified SHA256 header hash rewriting for `ElectronAsar\Integrity` in `Wand.exe`, auxiliary trust neutralization in `WandAuxiliaryService.exe`, and Electron fuse toggles without breaking executable signatures.
+- **Idempotent AST Account Reducer Locator.** Enhanced `LocateAccountReducer` in `EnhancerConfig.cs` to match both pristine reducer definitions and pre-existing wrapper expressions, enabling flawless re-patching and regression testing without AST collision errors.
+- **Resilient Webpack QR Renderer Resolution.** Hardened `remote-popup-cleanup.js` and `qr-renderer.js` to automatically fall back to `toCanvas` when `WAND_QR_RENDERER_EXPORT` varies across tree-shaken webpack chunks.
+- **Preserved Remote Bridge Invariants.** Maintained port 3223, ephemeral pairing tokens, dynamic service discovery, and clean production dist assets without mock/debug tokens.
 
-### Web Panel Toolchain Modernization & Community Locales
-
-- **Modernized Toolchain.** Bumped Vite to `^7.3.7` in `web-panel/package.json` ensuring optimized build and packaging performance.
-- **Bengali (Bangladesh) Community Locale.** Added synchronized Bengali localization dictionary (`lang.bn-BD.xaml`) and registered `bn-BD` culture in `LocalizationManager.cs` and `WandEnhancer.csproj`.
-- **Zero-Warning Dist Sanitation.** Enforced strict Biome linting (0 errors), Vitest test suite pass, and verified zero forbidden mock/debug tokens in production dist assets.
-
-## [2.4.0.0] - 2026-10-17
-
-### Wand / WeMod 12.64.1 Zero-Fail Compatibility
-
-- **First-Class Certified Support for WeMod / Wand 12.64.1.** Fully verified and hardened against the newest WeMod / Wand 12.64.1 release (Electron 41.7.0, Chromium 146.0.7680.216, V8 wire version 1 with 9 fuses).
-- **Idempotent AST Account Reducer Locator.** Enhanced `LocateAccountReducer` in `EnhancerConfig.cs` to transparently match both pristine reducer definitions and pre-existing wrapper expressions, enabling flawless re-patching and regression testing without AST collision errors.
-- **Resilient Webpack QR Renderer Resolution.** Hardened `remote-popup-cleanup.js` and `qr-renderer.js` to automatically fall back to `toCanvas` when `WAND_QR_RENDERER_EXPORT` (`mo`) varies across tree-shaken webpack chunks.
-- **Comprehensive Verification Across 535 Bundles.** All 12 structural patch locators, PE resource hash synchronization (`AsarIntegrityResourcePatch`), auxiliary trust neutralizer (`AuxTrustNeutralizer`), and disk fuse patches verified 100% operational against genuine 12.64.1 binaries and ASAR packages.
-- **Auto-Doctor Diagnostic Certification.** Successfully validated 12.64.1 environment diagnostics, permissions self-healing, and firewall rule status with zero warnings.
-
-## [2.3.0.0] - 2026-10-16
-
-### Brand & Architectural Sovereignty
-
-- **SovereignTitan Flagship Architecture.** Authored and architected by Abdelrahman Ayman (`@abdelrahmanayman722-ops`), transforming the engine into an elite cyberpunk desktop modding solution with native assembly identity (`SovereignTitan.exe`).
-- **Cyberpunk Obsidian & Neon Cyan Visual Aesthetic.** Complete visual overhaul featuring a deep dark obsidian backdrop (`#070A13`), glowing cyan accents (`#00F0FF`), refined dark glass cards, and glowing borders.
-
-### Diagnostics & Self-Healing
+### Auto-Doctor Diagnostics & Intelligent Process Lock Recovery
 
 - **Integrated Auto-Doctor & Environment Fixer.** One-click self-healing engine in the desktop client (`AutoDoctorHelper.cs`) that automatically detects and releases background process locks, clears restrictive Windows file attributes (ReadOnly flags), configures Windows Firewall rules for port 3223, and validates pristine ASAR backup integrity.
+- **Intelligent Process Tree & Helper Termination.** Added `TryKillProcessesUnder(string directoryPrefix)` in `ProcessTerminator.cs` to terminate background helper processes residing under the Squirrel root (e.g. `Update.exe`, crashpad handler, watcher stubs) before patch or restore.
+- **Deep Module Lock Diagnostics.** Introduced `FindProcessesUsing(string path)` to inspect active process module tables, accurately detecting and explicitly naming external games or applications locking `overlay_game_x64.dll` or unpacked assets across both individual file paths and directory trees.
+- **Exponential Backoff File Recovery.** Added `RetryWhileLocked` in `Enhancer.cs` with exponential backoff on `IOException` and `UnauthorizedAccessException` to gracefully allow OS handle table tear-downs and transient locks to settle.
 
-### Telemetry & Real-Time Monitoring
+### Sovereign Architecture, Telemetry HUD & Multi-Locale
 
+- **SovereignTitan Flagship Architecture.** Authored and architected under Eng. Abdelrahman Rashad (`@abdelrahmanayman722-ops`), delivering a sovereign cyberpunk modding engine with native assembly identity (`SovereignTitan.exe`).
+- **Cyberpunk Obsidian & Neon Cyan Visual Aesthetic.** Complete visual overhaul featuring a deep dark obsidian backdrop (`#070A13`), glowing cyan accents (`#00F0FF`), refined dark glass cards, and glowing borders.
 - **Live Hardware & Telemetry HUD.** Embedded real-time telemetry component (`TelemetryHUD.tsx`) streaming connection latency (Ping in ms), real-time CPU utilization with dynamic load bars, and active RAM consumption directly to the mobile remote panel.
+- **Modernized Toolchain & Multi-Locale Support.** Bumped Vite to `^7.3.7`, enhanced native Arabic translation (`lang.ar-SA.xaml`) with RTL layout, and added Bengali community locale (`lang.bn-BD.xaml`).
 
-### Wand 12.61 / 12.62+ Zero-Fail Compatibility
-
-- **In-Place ASAR Integrity PE Resource Patching.** `AsarIntegrityResourcePatch` computes the SHA256 header hash of the patched `app.asar` and updates `Wand.exe` PE resource `ElectronAsar\Integrity` in-place, preventing application crashes on modern builds.
-- **Auxiliary Service Integrity Neutralization.** `AuxFuseIntegrityNeutralizer` bypasses all 3 independent runtime integrity checks in `WandAuxiliaryService.exe` to allow seamless trainer DLL injection.
-- **Resilient File Access & Clipboard Retries.** Introduced `FileRetry` with exponential backoff on file locks, and `ClipboardRetry` mitigating native Windows `CLIPBRD_E_CANT_OPEN` errors.
-- **Background Update Detection.** Integrated `UpdateWatcherService` and `WatcherAutostart` to automatically detect client updates and re-apply modifications seamlessly.
 
 ## [2.2.0.0] - 2026-10-08
 

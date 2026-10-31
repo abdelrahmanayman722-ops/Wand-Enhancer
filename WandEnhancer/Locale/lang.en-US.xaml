@@ -12,7 +12,7 @@
     <s:String x:Key="mw_patch">Enhance</s:String>
     <s:String x:Key="mw_restore">Restore</s:String>
     <s:String x:Key="mw_source_code">Source code</s:String>
-    <s:String x:Key="mw_made_by">Made with ❤️ by Abdelrahman Ayman (@abdelrahmanayman722-ops)</s:String>
+    <s:String x:Key="mw_made_by">Made with ❤️ by Eng. Abdelrahman Rashad (@abdelrahmanayman722-ops)</s:String>
     <s:String x:Key="mw_star_hint">Put a star if you found this helpful ;)</s:String>
     <s:String x:Key="mw_auto_doctor">Auto-Doctor &amp; Environment Fixer</s:String>
     <s:String x:Key="mw_copy_logs">Copy logs to clipboard</s:String>

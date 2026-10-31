@@ -153,3 +153,5 @@ WandEnhancer.exe
 SovereignTitan.exe
 WandTitan.exe
 *.exe
+.agents/
+release/*.zip

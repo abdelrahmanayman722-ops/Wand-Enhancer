@@ -12,7 +12,7 @@
     <s:String x:Key="mw_patch">تعزيز وتعديل</s:String>
     <s:String x:Key="mw_restore">استعادة الأصلي</s:String>
     <s:String x:Key="mw_source_code">المصدر البرمجي</s:String>
-    <s:String x:Key="mw_made_by">تم التطوير والتعريب بـ ❤️ بواسطة عبد الرحمن أيمن (@abdelrahmanayman722-ops)</s:String>
+    <s:String x:Key="mw_made_by">تم التطوير والتعريب بـ ❤️ بواسطة المهندس عبد الرحمن رشاد (@abdelrahmanayman722-ops)</s:String>
     <s:String x:Key="mw_star_hint">ضع نجمة على المستودع إذا أعجبك المشروع ;)</s:String>
     <s:String x:Key="mw_auto_doctor">فحص وإصلاح النظام التلقائي (Auto-Doctor)</s:String>
     <s:String x:Key="mw_copy_logs">نسخ السجلات للحافظة</s:String>
