@@ -62,7 +62,7 @@ To guarantee that downloaded release binaries are genuine, unadulterated, and fr
 
 #### Automated Check in PowerShell:
 ```powershell
-$expectedHash = "YOUR_EXPECTED_SHA256_HASH_HERE"
+$expectedHash = "c49e30de5662fcf07e0a4a2d422037271e5fa4b70ad1c39f3ab5400d15090153" # Official v2.3.0.0 SHA256
 $calculatedHash = (Get-FileHash -Path .\SovereignTitan.exe -Algorithm SHA256).Hash
 if ($calculatedHash -eq $expectedHash) {
     Write-Host "[+] Checksum VERIFIED: Authentic binary from Eng. Abdelrahman Rashad." -ForegroundColor Green
